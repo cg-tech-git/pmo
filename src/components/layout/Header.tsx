@@ -1,24 +1,27 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
   Bars3Icon,
   BellIcon,
   UserCircleIcon,
   XMarkIcon,
+  CogIcon,
 } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
+import { useAuth } from '@/contexts/AuthContext'
 
 const navigation = [
+  { name: 'Home', href: '/home' },
   { name: 'Dashboard', href: '/' },
-  { name: 'Process Library', href: '/processes' },
+  { name: 'Templates', href: '/processes' },
   { name: 'Projects', href: '/projects' },
   { name: 'Commercial', href: '/commercial' },
   { name: 'Resources', href: '/resources' },
   { name: 'Reports', href: '/reports' },
-  { name: 'Admin', href: '/settings' },
 ]
 
 interface HeaderProps {
@@ -29,6 +32,28 @@ interface HeaderProps {
 
 export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMobileMenu }: HeaderProps) {
   const pathname = usePathname()
+  const { user, signOut, loading } = useAuth()
+  const [avatarError, setAvatarError] = useState(false)
+  const [dropdownAvatarError, setDropdownAvatarError] = useState(false)
+  
+  // Debug in useEffect to ensure it runs on client side
+  useEffect(() => {
+    console.log('=== Header Component Debug (Client Side) ===')
+    console.log('Component mounted on client')
+    console.log('Loading state:', loading)
+    console.log('User object:', user)
+    console.log('User exists:', !!user)
+    console.log('User photoURL:', user?.photoURL)
+    console.log('User displayName:', user?.displayName)
+    console.log('User email:', user?.email)
+    console.log('PhotoURL type:', typeof user?.photoURL)
+    console.log('PhotoURL length:', user?.photoURL?.length)
+    console.log('=======================================')
+    
+    // Reset avatar error states when user changes
+    setAvatarError(false)
+    setDropdownAvatarError(false)
+  }, [user, loading])
 
   return (
     <>
@@ -79,27 +104,32 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
                   </div>
                 </Transition.Child>
                 
-                {/* Mobile Menu Content */}
+                {/* Mobile Menu Content - Enhanced Design */}
                 <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                  <div className="flex h-16 shrink-0 items-center">
-                    <span className="text-lg font-semibold text-gray-900">PMO</span>
+                  <div className="flex h-16 shrink-0 items-center border-b border-gray-200">
+                    <span className="text-2xl font-bold text-primary-600">PMO</span>
                   </div>
                   <nav className="flex flex-1 flex-col">
-                    <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                    <ul role="list" className="flex flex-1 flex-col gap-y-2">
                       <li>
-                        <ul role="list" className="-mx-2 space-y-1">
+                        <ul role="list" className="space-y-1">
                           {navigation.map((item) => {
                             const isActive = pathname === item.href
                             return (
                               <li key={item.name}>
                                 <Link
                                   href={item.href}
-                                  className={`nav-link ${
-                                    isActive ? 'nav-link-active' : 'nav-link-inactive'
+                                  className={`group flex items-center gap-x-3 rounded-lg p-3 text-sm font-medium transition-all duration-200 ${
+                                    isActive
+                                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                                   }`}
                                   onClick={onCloseMobileMenu}
                                 >
                                   {item.name}
+                                  {isActive && (
+                                    <div className="ml-auto h-2 w-2 rounded-full bg-primary-600" />
+                                  )}
                                 </Link>
                               </li>
                             )
@@ -115,40 +145,42 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
         </Dialog>
       </Transition.Root>
 
-      {/* Header */}
-      <div className="sticky top-0 z-40 border-b border-gray-200 bg-white shadow-sm">
+      {/* Header - Enhanced with Better Design */}
+      <div className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
         <div className="relative flex h-16 items-center">
-          {/* PMO Title - Far Left Edge */}
+          {/* PMO Title - Enhanced Branding */}
           <div className="absolute left-0 flex items-center px-4 sm:px-6 lg:px-8 z-10">
             {/* Mobile menu button */}
             <button
               type="button"
-              className="-m-2.5 p-2.5 text-gray-700 lg:hidden mr-4"
+              className="-m-2.5 p-2.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors lg:hidden mr-4"
               onClick={onMenuClick}
             >
               <span className="sr-only">Open menu</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
 
-            {/* PMO Title */}
-            <span className="text-xl font-semibold text-gray-900">PMO</span>
+            {/* Enhanced PMO Branding */}
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-gray-900">PMO</span>
+            </div>
           </div>
 
-          {/* Navigation Container - Aligned with content cards */}
+          {/* Navigation Container - Enhanced Design */}
           <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
-              {/* Desktop Navigation */}
-              <nav className="hidden lg:flex lg:space-x-8 lg:ml-0">
+              {/* Desktop Navigation - Improved Active States */}
+              <nav className="hidden lg:flex lg:space-x-1 lg:ml-0">
                 {navigation.map((item) => {
                   const isActive = pathname === item.href
                   return (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200 ${
+                      className={`group relative flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                         isActive
-                          ? 'text-primary-600'
-                          : 'text-gray-500 hover:text-gray-700'
+                          ? 'text-gray-900'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                     >
                       {item.name}
@@ -159,37 +191,63 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
             </div>
           </div>
 
-          {/* User Menu - Absolute Right Edge with Same Padding */}
+          {/* User Menu - Enhanced Design */}
           <div className="absolute right-0 flex items-center px-4 sm:px-6 lg:px-8 z-10">
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Notifications */}
+              {/* Enhanced Notifications */}
               <button
                 type="button"
-                className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <span className="sr-only">View notifications</span>
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
+                  <path fill="currentColor" d="M18,13.2V10c0-2.9-2.1-5.4-5-5.9V3c0-0.6-0.4-1-1-1s-1,0.4-1,1v1.1c-2.9,0.5-5,3-5,5.9v3.2c-1.2,0.4-2,1.5-2,2.8v2c0,0.6,0.4,1,1,1h3.1c0.5,2.1,2.7,3.4,4.8,2.9c1.4-0.4,2.5-1.5,2.9-2.9H19c0.6,0,1-0.4,1-1v-2C20,14.7,19.2,13.6,18,13.2z M12,20c-0.7,0-1.4-0.4-1.7-1h3.5C13.4,19.6,12.7,20,12,20z"></path>
+                </svg>
+                {/* Notification Badge */}
+                <div className="absolute -top-1 -right-1 h-3 w-3 bg-error-500 rounded-full border-2 border-white" />
+              </button>
+
+              {/* Settings */}
+              <button
+                type="button"
+                className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <span className="sr-only">Settings</span>
+                <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
+                  <path fill="currentColor" d="M20.3,12.7c-0.3-0.4-0.3-0.9,0-1.3l1.3-1.4c0.3-0.3,0.3-0.8,0.1-1.2l-2-3.5c-0.2-0.4-0.6-0.6-1.1-0.5l-1.9,0.4c-0.5,0.1-1-0.2-1.1-0.7l-0.6-1.8C14.8,2.3,14.4,2,14,2h-4C9.6,2,9.2,2.3,9.1,2.7L8.4,4.5C8.3,5,7.8,5.3,7.3,5.2L5.4,4.8C5,4.7,4.6,4.9,4.3,5.3l-2,3.5C2.1,9.1,2.2,9.6,2.5,9.9l1.3,1.4c0.3,0.4,0.3,0.9,0,1.3l-1.3,1.4c-0.3,0.3-0.3,0.8-0.1,1.2l2,3.5c0.2,0.4,0.6,0.6,1.1,0.5l1.9-0.4c0.5-0.1,1,0.2,1.1,0.7l0.6,1.8C9.2,21.7,9.6,22,10,22h4c0.4,0,0.8-0.3,0.9-0.7l0.6-1.8c0.2-0.5,0.7-0.8,1.1-0.7l1.9,0.4c0.4,0.1,0.9-0.1,1.1-0.5l2-3.5c0.2-0.4,0.2-0.8-0.1-1.2L20.3,12.7z M12,15c-1.7,0-3-1.3-3-3s1.3-3,3-3s3,1.3,3,3S13.7,15,12,15z"></path>
+                </svg>
               </button>
 
               {/* Separator */}
-              <div
-                className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
-                aria-hidden="true"
-              />
+              <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-300" />
 
               {/* Profile dropdown */}
               <Menu as="div" className="relative">
-                <Menu.Button className="-m-1.5 flex items-center p-1.5">
+                <Menu.Button className="relative flex max-w-xs items-center rounded-lg bg-white text-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 p-1">
+                  <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  <UserCircleIcon className="h-8 w-8 text-gray-400" />
-                  <span className="hidden lg:flex lg:items-center">
-                    <span
-                      className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                      aria-hidden="true"
-                    >
-                      John Doe
-                    </span>
-                  </span>
+                  {!loading && user && user.photoURL && !dropdownAvatarError ? (
+                    <Image
+                      className="h-8 w-8 rounded-full object-cover ring-2 ring-gray-200"
+                      src={user.photoURL}
+                      alt={user.displayName || user.email || 'User'}
+                      width={32}
+                      height={32}
+                      onError={() => {
+                        console.log('Dropdown avatar failed to load')
+                        setDropdownAvatarError(true)
+                      }}
+                      onLoad={() => {
+                        console.log('Dropdown avatar loaded successfully')
+                      }}
+                      priority={false}
+                      unoptimized={true}
+                    />
+                  ) : (
+                    <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
+                      <UserCircleIcon className="h-6 w-6 text-primary-600" />
+                    </div>
+                  )}
                 </Menu.Button>
                 <Transition
                   as={Fragment}
@@ -200,43 +258,60 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={`block px-3 py-1 text-sm leading-6 text-gray-900 ${
-                            active ? 'bg-gray-50' : ''
-                          }`}
-                        >
-                          Your profile
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={`block px-3 py-1 text-sm leading-6 text-gray-900 ${
-                            active ? 'bg-gray-50' : ''
-                          }`}
-                        >
-                          Settings
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          href="#"
-                          className={`block px-3 py-1 text-sm leading-6 text-gray-900 ${
-                            active ? 'bg-gray-50' : ''
-                          }`}
-                        >
-                          Sign out
-                        </a>
-                      )}
-                    </Menu.Item>
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-gray-200 focus:outline-none">
+                    {/* User Info Section */}
+                    {!loading && user && (
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                          {user.photoURL && !avatarError ? (
+                            <Image
+                              className="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200"
+                              src={user.photoURL}
+                              alt={user.displayName || user.email || 'User'}
+                              width={40}
+                              height={40}
+                              onError={() => {
+                                console.log('Menu avatar failed to load')
+                                setAvatarError(true)
+                              }}
+                              priority={false}
+                              unoptimized={true}
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                              <UserCircleIcon className="h-8 w-8 text-primary-600" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {user.displayName || 'User'}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Menu Items */}
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={signOut}
+                            className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                              active ? 'bg-gray-50 text-gray-900' : 'text-gray-700'
+                            }`}
+                          >
+                            <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Sign out
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
                   </Menu.Items>
                 </Transition>
               </Menu>

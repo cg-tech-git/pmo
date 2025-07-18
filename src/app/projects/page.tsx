@@ -1,28 +1,43 @@
 'use client'
 
 import MainLayout from '@/components/layout/MainLayout'
+import Image from 'next/image'
 
 export default function ProjectsPage() {
   return (
     <MainLayout>
-      <div>
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Projects</h1>
-          <p className="text-gray-600">
-            This section will contain detailed project management features including:
-          </p>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900">Project Creation</h3>
-              <p className="text-sm text-gray-600 mt-1">Create and configure new projects</p>
+      {/* Hero Section with shadow space */}
+      <div className="relative py-8">
+        {/* Unified hero container with shadow */}
+        <div className="bg-white rounded-xl border border-gray-100 h-[360px] overflow-hidden shadow-md">
+          <div className="grid h-full" style={{ gridTemplateColumns: '1fr 0.8fr' }}>
+            {/* Left Column - Text Content */}
+            <div className="flex flex-col justify-center p-8 pb-12">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary-600 tracking-tight mb-2">Project Portfolio</div>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
+                Planning & Scheduling
+              </h1>
+              <p className="mt-4 text-sm lg:text-base text-gray-600 leading-relaxed">
+                Comprehensive project tracking, milestone management and team collaboration platform. 
+                Monitor project progress, manage resources and deliver successful outcomes with data-driven insights.
+              </p>
+              
+              {/* Coming Soon Notice */}
+              <div className="mt-6 flex gap-4">
+                <div className="bg-primary-600 text-white text-sm px-4 py-2 rounded-full font-medium">
+                  Coming soon!
+                </div>
+              </div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900">Milestone Tracking</h3>
-              <p className="text-sm text-gray-600 mt-1">Track project milestones and deliverables</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900">Team Management</h3>
-              <p className="text-sm text-gray-600 mt-1">Assign and manage project teams</p>
+
+            {/* Right Column - Image */}
+            <div className="relative h-full overflow-hidden">
+              <Image
+                src="/images/dashboards.png"
+                alt="PMO Project Management"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
         </div>

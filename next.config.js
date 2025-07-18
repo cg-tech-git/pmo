@@ -7,7 +7,36 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com', 'storage.googleapis.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh4.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh5.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh6.googleusercontent.com',
+      },
+    ],
   },
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY || 'pmo-application-development',
@@ -21,12 +50,21 @@ const nextConfig = {
       canvas: false,
     }
 
-    // Configure PDF.js worker
+    // Configure PDF.js worker and Firebase compatibility
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
       }
+    }
+
+    // Fix for Firebase/undici compatibility issue
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'undici': false,
     }
 
     // Handle PDF files

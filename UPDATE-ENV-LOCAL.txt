@@ -1,0 +1,23 @@
+COPY THESE EXACT LINES TO YOUR .env.local FILE:
+
+# Firebase Configuration - Real values from Firebase Console
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCxM-9g3nvqEKz-9DSS4dFi0aJ0iyFLS00
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=pmo-authentication.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=pmo-authentication
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=pmo-authentication.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=1094577705424
+NEXT_PUBLIC_FIREBASE_APP_ID=1:1094577705424:web:126af87da71c9986f8a9d5
+
+# Existing GCP Configuration (keep these as they are)
+GCP_PROJECT_ID=pmo-documents-hybrid-shine-466111-s0
+GCS_BUCKET_NAME=pmo-documents-hybrid-shine-466111-s0
+
+INSTRUCTIONS:
+1. Open your .env.local file in the PMO project root
+2. Replace the existing Firebase variables with the values above
+3. Keep the existing GCP variables unchanged
+4. Save the file
+5. The development server will automatically restart
+6. Visit http://localhost:3000 to test authentication
+
+After updating, your Firebase authentication will be fully functional! 

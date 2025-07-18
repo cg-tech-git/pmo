@@ -16,11 +16,12 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon },
+  { name: 'Home', href: '/home', icon: HomeIcon },
+  { name: 'Dashboard', href: '/', icon: ChartBarIcon },
   { name: 'Projects', href: '/projects', icon: FolderIcon },
   { name: 'Resources', href: '/resources', icon: UsersIcon },
-  { name: 'Commercial', href: '/commercial', icon: ChartBarIcon },
-  { name: 'Reports', href: '/reports', icon: DocumentTextIcon },
+  { name: 'Commercial', href: '/commercial', icon: DocumentTextIcon },
+  { name: 'Reports', href: '/reports', icon: ClipboardDocumentListIcon },
   { name: 'Process Library', href: '/processes', icon: ClipboardDocumentListIcon },
   { name: 'Settings', href: '/settings', icon: CogIcon },
 ]
