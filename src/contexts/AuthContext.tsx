@@ -33,11 +33,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     // Check if Firebase is configured
     if (!auth) {
+      console.log('Firebase not configured, setting loading to false')
       setLoading(false)
       return
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('Auth state changed:', user ? `User: ${user.email}` : 'No user')
       if (user) {
         // Verify user domain - support multiple allowed domains
         const allowedDomains = [
@@ -54,6 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const isAllowedDomain = allowedDomains.some(domain => userEmail.endsWith(domain))
         
         if (!isAllowedDomain) {
+          console.log('User domain not allowed:', userEmail)
           signOut(auth)
           router.push('/signin')
           return
@@ -65,7 +68,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false)
     })
 
-    return () => unsubscribe()
+    // Fallback timeout to ensure loading doesn't get stuck
+    const fallbackTimer = setTimeout(() => {
+      console.log('Auth state fallback timeout - setting loading to false')
+      setLoading(false)
+    }, 3000)
+
+    return () => {
+      unsubscribe()
+      clearTimeout(fallbackTimer)
+    }
   }, [router])
 
   const handleSignOut = async () => {

@@ -13,14 +13,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <ProtectedRoute>
+      {/* Header with Navigation - Outside of any container */}
+      <Header 
+        mobileMenuOpen={mobileMenuOpen}
+        onMenuClick={() => setMobileMenuOpen(true)}
+        onCloseMobileMenu={() => setMobileMenuOpen(false)}
+      />
+      
       <div className="min-h-full">
-        {/* Header with Navigation */}
-        <Header 
-          mobileMenuOpen={mobileMenuOpen}
-          onMenuClick={() => setMobileMenuOpen(true)}
-          onCloseMobileMenu={() => setMobileMenuOpen(false)}
-        />
-
         {/* Main content */}
         <main className="bg-gray-25">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">

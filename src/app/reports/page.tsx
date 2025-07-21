@@ -7,36 +7,37 @@ export default function ReportsPage() {
   return (
     <MainLayout>
       {/* Hero Section with shadow space */}
-      <div className="relative py-8">
+      <div className="relative pt-8 pb-[33px]">
         {/* Unified hero container with shadow */}
-        <div className="bg-white rounded-xl border border-gray-100 h-[360px] overflow-hidden shadow-md">
-          <div className="grid h-full" style={{ gridTemplateColumns: '1fr 0.8fr' }}>
-            {/* Left Column - Text Content */}
-            <div className="flex flex-col justify-center p-8 pb-12">
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary-600 tracking-tight mb-2">Project Reports</div>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
+        <div className="bg-white rounded-xl border border-gray-100 h-[280px] overflow-hidden shadow-md">
+          <div className="grid h-full" style={{ gridTemplateColumns: '0.65fr 0.35fr' }}>
+            {/* Left Column - Text Content (65%) */}
+            <div className="flex flex-col justify-center p-6">
+              <div className="text-xl md:text-2xl lg:text-3xl font-bold text-primary-600 tracking-tight mb-1">Project Reports</div>
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-gray-900">
                 Artificial & Business Intelligence
               </h1>
-              <p className="mt-4 text-sm lg:text-base text-gray-600 leading-relaxed">
+              <p className="mt-3 text-sm text-gray-600 leading-relaxed">
                 Comprehensive reporting and analytics platform with custom dashboards, automated reporting and data visualization. 
-                Generate insights, track performance metrics and make data-driven decisions with advanced business intelligence tools.
+                Generate insights, track performance metrics and make data-driven decisions.
               </p>
               
               {/* Coming Soon Notice */}
-              <div className="mt-6 flex gap-4">
-                <div className="bg-primary-600 text-white text-sm px-4 py-2 rounded-full font-medium">
-                  Coming soon!
+              <div className="mt-4 flex gap-4">
+                <div className="bg-primary-600 text-white text-sm px-4 py-2 rounded-full font-medium cursor-pointer hover:bg-gray-200 hover:text-gray-600 transition-colors">
+                  Learn more
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Image */}
-            <div className="relative h-full overflow-hidden">
+            {/* Right Column - Image (35%) */}
+            <div className="relative h-full bg-white">
               <Image
-                src="/images/dashboards.png"
-                alt="PMO Reports & Analytics"
+                src="/images/repobanner.png"
+                alt="Reports Analytics"
                 fill
-                className="object-cover"
+                className="object-cover scale-90 -translate-y-[2%]"
+                priority
               />
             </div>
           </div>

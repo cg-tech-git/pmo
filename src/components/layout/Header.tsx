@@ -121,15 +121,12 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
                                   href={item.href}
                                   className={`group flex items-center gap-x-3 rounded-lg p-3 text-sm font-medium transition-all duration-200 ${
                                     isActive
-                                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
-                                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                                      ? 'text-primary-600'
+                                      : 'text-gray-700 hover:text-gray-900'
                                   }`}
                                   onClick={onCloseMobileMenu}
                                 >
                                   {item.name}
-                                  {isActive && (
-                                    <div className="ml-auto h-2 w-2 rounded-full bg-primary-600" />
-                                  )}
                                 </Link>
                               </li>
                             )
@@ -146,176 +143,170 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
       </Transition.Root>
 
       {/* Header - Enhanced with Better Design */}
-      <div className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
-        <div className="relative flex h-16 items-center">
-          {/* PMO Title - Enhanced Branding */}
-          <div className="absolute left-0 flex items-center px-4 sm:px-6 lg:px-8 z-10">
-            {/* Mobile menu button */}
+      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+        {/* PMO Title - Hard Left Edge */}
+        <div className="absolute left-0 top-0 h-16 flex items-center pl-4">
+          <span className="text-xl font-bold text-gray-900">PMO</span>
+        </div>
+        
+        {/* User Menu - Hard Right Edge */}
+        <div className="absolute right-0 top-0 h-16 flex items-center pr-4">
+          <div className="flex items-center gap-x-4 lg:gap-x-6">
+            {/* Enhanced Notifications */}
             <button
               type="button"
-              className="-m-2.5 p-2.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors lg:hidden mr-4"
-              onClick={onMenuClick}
+              className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
             >
-              <span className="sr-only">Open menu</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <span className="sr-only">View notifications</span>
+              <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
+                <path fill="currentColor" d="M18,13.2V10c0-2.9-2.1-5.4-5-5.9V3c0-0.6-0.4-1-1-1s-1,0.4-1,1v1.1c-2.9,0.5-5,3-5,5.9v3.2c-1.2,0.4-2,1.5-2,2.8v2c0,0.6,0.4,1,1,1h3.1c0.5,2.1,2.7,3.4,4.8,2.9c1.4-0.4,2.5-1.5,2.9-2.9H19c0.6,0,1-0.4,1-1v-2C20,14.7,19.2,13.6,18,13.2z M12,20c-0.7,0-1.4-0.4-1.7-1h3.5C13.4,19.6,12.7,20,12,20z"></path>
+              </svg>
+              {/* Notification Badge */}
+              <div className="absolute -top-1 -right-1 h-3 w-3 bg-error-500 rounded-full border-2 border-white" />
             </button>
 
-            {/* Enhanced PMO Branding */}
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-gray-900">PMO</span>
-            </div>
-          </div>
+            {/* Settings */}
+            <button
+              type="button"
+              className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              <span className="sr-only">Settings</span>
+              <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
+                <path fill="currentColor" d="M20.3,12.7c-0.3-0.4-0.3-0.9,0-1.3l1.3-1.4c0.3-0.3,0.3-0.8,0.1-1.2l-2-3.5c-0.2-0.4-0.6-0.6-1.1-0.5l-1.9,0.4c-0.5,0.1-1-0.2-1.1-0.7l-0.6-1.8C14.8,2.3,14.4,2,14,2h-4C9.6,2,9.2,2.3,9.1,2.7L8.4,4.5C8.3,5,7.8,5.3,7.3,5.2L5.4,4.8C5,4.7,4.6,4.9,4.3,5.3l-2,3.5C2.1,9.1,2.2,9.6,2.5,9.9l1.3,1.4c0.3,0.4,0.3,0.9,0,1.3l-1.3,1.4c-0.3,0.3-0.3,0.8-0.1,1.2l2,3.5c0.2,0.4,0.6,0.6,1.1,0.5l1.9-0.4c0.5-0.1,1,0.2,1.1,0.7l0.6,1.8C9.2,21.7,9.6,22,10,22h4c0.4,0,0.8-0.3,0.9-0.7l0.6-1.8c0.2-0.5,0.7-0.8,1.1-0.7l1.9,0.4c0.4,0.1,0.9-0.1,1.1-0.5l2-3.5c0.2-0.4,0.2-0.8-0.1-1.2L20.3,12.7z M12,15c-1.7,0-3-1.3-3-3s1.3-3,3-3s3,1.3,3,3S13.7,15,12,15z"></path>
+              </svg>
+            </button>
 
-          {/* Navigation Container - Enhanced Design */}
-          <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center">
-              {/* Desktop Navigation - Improved Active States */}
-              <nav className="hidden lg:flex lg:space-x-1 lg:ml-0">
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`group relative flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        isActive
-                          ? 'text-gray-900'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  )
-                })}
-              </nav>
-            </div>
-          </div>
+            {/* Separator */}
+            <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
 
-          {/* User Menu - Enhanced Design */}
-          <div className="absolute right-0 flex items-center px-4 sm:px-6 lg:px-8 z-10">
-            <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Enhanced Notifications */}
-              <button
-                type="button"
-                className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
+            {/* Profile dropdown */}
+            <Menu as="div" className="relative">
+              <Menu.Button className="relative flex max-w-xs items-center rounded-lg bg-white text-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 p-1">
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">Open user menu</span>
+                {!loading && user && user.photoURL && !dropdownAvatarError ? (
+                  <Image
+                    className="h-8 w-8 rounded-full object-cover ring-2 ring-gray-200"
+                    src={user.photoURL}
+                    alt={user.displayName || user.email || 'User'}
+                    width={32}
+                    height={32}
+                    onError={() => {
+                      console.log('Dropdown avatar failed to load')
+                      setDropdownAvatarError(true)
+                    }}
+                    onLoad={() => {
+                      console.log('Dropdown avatar loaded successfully')
+                    }}
+                    priority={false}
+                    unoptimized={true}
+                  />
+                ) : (
+                  <UserCircleIcon className="h-8 w-8 text-gray-400" aria-hidden="true" />
+                )}
+              </Menu.Button>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
               >
-                <span className="sr-only">View notifications</span>
-                <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-                  <path fill="currentColor" d="M18,13.2V10c0-2.9-2.1-5.4-5-5.9V3c0-0.6-0.4-1-1-1s-1,0.4-1,1v1.1c-2.9,0.5-5,3-5,5.9v3.2c-1.2,0.4-2,1.5-2,2.8v2c0,0.6,0.4,1,1,1h3.1c0.5,2.1,2.7,3.4,4.8,2.9c1.4-0.4,2.5-1.5,2.9-2.9H19c0.6,0,1-0.4,1-1v-2C20,14.7,19.2,13.6,18,13.2z M12,20c-0.7,0-1.4-0.4-1.7-1h3.5C13.4,19.6,12.7,20,12,20z"></path>
-                </svg>
-                {/* Notification Badge */}
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-error-500 rounded-full border-2 border-white" />
-              </button>
-
-              {/* Settings */}
-              <button
-                type="button"
-                className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <span className="sr-only">Settings</span>
-                <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-                  <path fill="currentColor" d="M20.3,12.7c-0.3-0.4-0.3-0.9,0-1.3l1.3-1.4c0.3-0.3,0.3-0.8,0.1-1.2l-2-3.5c-0.2-0.4-0.6-0.6-1.1-0.5l-1.9,0.4c-0.5,0.1-1-0.2-1.1-0.7l-0.6-1.8C14.8,2.3,14.4,2,14,2h-4C9.6,2,9.2,2.3,9.1,2.7L8.4,4.5C8.3,5,7.8,5.3,7.3,5.2L5.4,4.8C5,4.7,4.6,4.9,4.3,5.3l-2,3.5C2.1,9.1,2.2,9.6,2.5,9.9l1.3,1.4c0.3,0.4,0.3,0.9,0,1.3l-1.3,1.4c-0.3,0.3-0.3,0.8-0.1,1.2l2,3.5c0.2,0.4,0.6,0.6,1.1,0.5l1.9-0.4c0.5-0.1,1,0.2,1.1,0.7l0.6,1.8C9.2,21.7,9.6,22,10,22h4c0.4,0,0.8-0.3,0.9-0.7l0.6-1.8c0.2-0.5,0.7-0.8,1.1-0.7l1.9,0.4c0.4,0.1,0.9-0.1,1.1-0.5l2-3.5c0.2-0.4,0.2-0.8-0.1-1.2L20.3,12.7z M12,15c-1.7,0-3-1.3-3-3s1.3-3,3-3s3,1.3,3,3S13.7,15,12,15z"></path>
-                </svg>
-              </button>
-
-              {/* Separator */}
-              <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-300" />
-
-              {/* Profile dropdown */}
-              <Menu as="div" className="relative">
-                <Menu.Button className="relative flex max-w-xs items-center rounded-lg bg-white text-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 p-1">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  {!loading && user && user.photoURL && !dropdownAvatarError ? (
-                    <Image
-                      className="h-8 w-8 rounded-full object-cover ring-2 ring-gray-200"
-                      src={user.photoURL}
-                      alt={user.displayName || user.email || 'User'}
-                      width={32}
-                      height={32}
-                      onError={() => {
-                        console.log('Dropdown avatar failed to load')
-                        setDropdownAvatarError(true)
-                      }}
-                      onLoad={() => {
-                        console.log('Dropdown avatar loaded successfully')
-                      }}
-                      priority={false}
-                      unoptimized={true}
-                    />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
-                      <UserCircleIcon className="h-6 w-6 text-primary-600" />
-                    </div>
-                  )}
-                </Menu.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-gray-200 focus:outline-none">
-                    {/* User Info Section */}
-                    {!loading && user && (
-                      <div className="px-4 py-3 border-b border-gray-200">
-                        <div className="flex items-center gap-3">
-                          {user.photoURL && !avatarError ? (
-                            <Image
-                              className="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200"
-                              src={user.photoURL}
-                              alt={user.displayName || user.email || 'User'}
-                              width={40}
-                              height={40}
-                              onError={() => {
-                                console.log('Menu avatar failed to load')
-                                setAvatarError(true)
-                              }}
-                              priority={false}
-                              unoptimized={true}
-                            />
-                          ) : (
-                            <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-                              <UserCircleIcon className="h-8 w-8 text-primary-600" />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {user.displayName || 'User'}
-                            </p>
-                            <p className="text-xs text-gray-500 truncate">
-                              {user.email}
-                            </p>
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-gray-200 focus:outline-none">
+                  {/* User Info Section */}
+                  {!loading && user && (
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <div className="flex items-center gap-3">
+                        {user.photoURL && !avatarError ? (
+                          <Image
+                            className="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200"
+                            src={user.photoURL}
+                            alt={user.displayName || user.email || 'User'}
+                            width={40}
+                            height={40}
+                            onError={() => {
+                              console.log('Menu avatar failed to load')
+                              setAvatarError(true)
+                            }}
+                            priority={false}
+                            unoptimized={true}
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                            <UserCircleIcon className="h-8 w-8 text-primary-600" />
                           </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {user.displayName || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {user.email}
+                          </p>
                         </div>
                       </div>
-                    )}
-                    
-                    {/* Menu Items */}
-                    <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={signOut}
-                            className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                              active ? 'bg-gray-50 text-gray-900' : 'text-gray-700'
-                            }`}
-                          >
-                            <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            Sign out
-                          </button>
-                        )}
-                      </Menu.Item>
                     </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+                  )}
+                  
+                  {/* Menu Items */}
+                  <div className="py-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={signOut}
+                          className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                            active ? 'bg-gray-50 text-gray-900' : 'text-gray-700'
+                          }`}
+                        >
+                          <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          Sign out
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
+        </div>
+        
+        <div className="mx-auto max-w-7xl w-full">
+          <div className="relative flex h-16 items-center px-4 sm:px-6 lg:px-8">
+            {/* Mobile menu button - Positioned with margin to avoid PMO */}
+            <div className="flex items-center ml-12 lg:hidden">
+              <button
+                type="button"
+                className="-m-2.5 p-2.5 text-primary-600 hover:text-primary-700 hover:bg-gray-50 rounded-lg transition-colors"
+                onClick={onMenuClick}
+              >
+                <span className="sr-only">Open menu</span>
+                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              </button>
             </div>
+
+            {/* Desktop Navigation - Left Aligned */}
+            <nav className="hidden lg:flex lg:space-x-1">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`group relative flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActive
+                        ? 'text-primary-600'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </nav>
           </div>
         </div>
       </div>
