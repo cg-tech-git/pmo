@@ -24,7 +24,7 @@ export default function ReportsPage() {
               
               {/* Coming Soon Notice */}
               <div className="mt-4 flex gap-4">
-                <div className="bg-primary-600 text-white text-sm px-4 py-2 rounded-full font-medium cursor-pointer hover:bg-gray-200 hover:text-gray-600 transition-colors">
+                <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-primary-600 hover:text-white transition-colors">
                   Learn more
                 </div>
               </div>

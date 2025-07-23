@@ -8,7 +8,6 @@ import {
   DocumentTextIcon,
   ArrowLeftIcon,
   EyeIcon,
-  ArrowDownTrayIcon,
   ChevronUpIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline'
@@ -17,15 +16,18 @@ interface CommercialTemplate {
   id: string
   title: string
   description: string
-  fileType: 'pdf' | 'docx' | 'xlsx'
+  fileType: 'pdf' | 'docx' | 'xlsx' | 'google-sheets' | 'google-docs' | 'google-slides' | 'smartsheet'
   category: string
   thumbnail?: string
   fileUrl?: string
   lastUpdated: string
-  downloads: number
+
+  viewLink?: string
+  copyLink?: string
+  isGoogleTemplate?: boolean
 }
 
-type SortField = 'title' | 'fileType' | 'category' | 'lastUpdated' | 'downloads'
+type SortField = 'title' | 'category'
 type SortDirection = 'asc' | 'desc'
 
 export default function CommercialTemplatesPage() {
@@ -34,61 +36,43 @@ export default function CommercialTemplatesPage() {
 
   // 6 Commercial Template Documents
   const commercialTemplates: CommercialTemplate[] = [
-    // Customer Category - 4 documents
     {
-      id: 'c01',
+      id: 'ct-001',
       title: 'New Customer Application',
-      description: 'Application form for new customer registration and onboarding process',
-      fileType: 'pdf',
-      category: 'Customer',
-      lastUpdated: '2024-01-25',
-      downloads: 245
+      description: 'Comprehensive new customer onboarding and application template',
+      fileType: 'google-docs',
+      category: 'Customer Management',
+      lastUpdated: '2024-01-15',
+      viewLink: 'https://docs.google.com/document/d/1uce7rn6B7QXxE1Zxdf1wOV6MFrlaialQ72XFhpPHCJk/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1uce7rn6B7QXxE1Zxdf1wOV6MFrlaialQ72XFhpPHCJk/copy',
+      isGoogleTemplate: true
     },
     {
-      id: 'c02',
-      title: 'Credit Application',
-      description: 'Credit application form for customer credit assessment and approval',
-      fileType: 'pdf',
-      category: 'Customer',
-      lastUpdated: '2024-01-25',
-      downloads: 198
-    },
-    {
-      id: 'c03',
+      id: 'ct-002',
       title: 'Terms & Conditions',
-      description: 'Standard terms and conditions for customer agreements and contracts',
-      fileType: 'pdf',
-      category: 'Customer',
-      lastUpdated: '2024-01-25',
-      downloads: 312
+      description: 'Standard terms and conditions template for commercial agreements and contracts',
+      fileType: 'google-docs',
+      category: 'Legal',
+      lastUpdated: '2024-01-22',
+      viewLink: 'https://docs.google.com/document/d/1RGU5rwuh3h2UMwVYwMdPurxVemBmIEiO6fvSrrCjgkc/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1RGU5rwuh3h2UMwVYwMdPurxVemBmIEiO6fvSrrCjgkc/copy',
+      isGoogleTemplate: true
     },
     {
-      id: 'c04',
-      title: 'Non-disclosure Agreement',
-      description: 'Non-disclosure agreement template for confidential customer information',
-      fileType: 'pdf',
-      category: 'Customer',
+      id: 'ct-005',
+      title: 'Contract Review Checklist',
+      description: 'Comprehensive checklist for reviewing and approving commercial contracts',
+      fileType: 'xlsx',
+      category: 'Legal',
       lastUpdated: '2024-01-25',
-      downloads: 156
-    },
-    // Supplier Category - 2 documents
-    {
-      id: 's01',
-      title: 'New Supplier Application',
-      description: 'Application form for new supplier registration and vendor onboarding',
-      fileType: 'pdf',
-      category: 'Supplier',
-      lastUpdated: '2024-01-25',
-      downloads: 189
     },
     {
-      id: 's02',
-      title: 'Credit Request',
-      description: 'Credit request form for supplier payment terms and credit arrangements',
-      fileType: 'pdf',
-      category: 'Supplier',
-      lastUpdated: '2024-01-25',
-      downloads: 134
+      id: 'ct-006',
+      title: 'Vendor Assessment',
+      description: 'Vendor evaluation and assessment template for supplier selection',
+      fileType: 'xlsx',
+      category: 'Procurement',
+      lastUpdated: '2024-01-20',
     }
   ]
 
@@ -101,26 +85,29 @@ export default function CommercialTemplatesPage() {
     }
   }
 
-  const categoryOrder = ['Customer', 'Supplier']
+  const categoryOrder = ['Customer Management', 'Finance', 'Legal', 'Procurement']
 
   const sortedTemplates = [...commercialTemplates].sort((a, b) => {
     // Primary sort by category order
     const aCategoryIndex = categoryOrder.indexOf(a.category)
     const bCategoryIndex = categoryOrder.indexOf(b.category)
     
-    if (aCategoryIndex !== bCategoryIndex) {
+    if (aCategoryIndex !== -1 && bCategoryIndex !== -1) {
       return aCategoryIndex - bCategoryIndex
+    }
+    if (aCategoryIndex !== -1) return -1
+    if (bCategoryIndex !== -1) return 1
+
+    // If neither category is in the order array, sort alphabetically by category
+    if (a.category !== b.category) {
+      return a.category.localeCompare(b.category)
     }
 
     // Secondary sort by selected field
     let aValue: any = a[sortField]
     let bValue: any = b[sortField]
 
-    // Convert dates to comparable format
-    if (sortField === 'lastUpdated') {
-      aValue = new Date(aValue).getTime()
-      bValue = new Date(bValue).getTime()
-    }
+
 
     // Convert to string for consistent comparison
     if (typeof aValue === 'string') {
@@ -177,6 +164,49 @@ export default function CommercialTemplatesPage() {
             <path d="M32,23c0.553,0,1,0.448,1,1v12c0,0.552-0.447,1-1,1H16c-0.553,0-1-0.448-1-1V24c0-0.552,0.447-1,1-1	H32 M32,22.5H16c-0.827,0-1.5,0.673-1.5,1.5v12c0,0.827,0.673,1.5,1.5,1.5h16c0.827,0,1.5-0.673,1.5-1.5V24	C33.5,23.173,32.827,22.5,32,22.5L32,22.5z" opacity=".07"></path>
           </svg>
         )
+      case 'google-sheets':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#43a047" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#c8e6c9" d="M40 13L30 13 30 3z"></path>
+            <path fill="#2e7d32" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e8f5e8" d="M31 23H17c-0.552 0-1 0.448-1 1v16c0 0.552 0.448 1 1 1h14c0.552 0 1-0.448 1-1V24C32 23.448 31.552 23 31 23zM20 26h3v3h-3V26zM20 30h3v3h-3V30zM20 34h3v3h-3V34zM26 26h3v3h-3V26zM26 30h3v3h-3V30zM26 34h3v3h-3V34z"></path>
+          </svg>
+        )
+      case 'google-docs':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+          </svg>
+        )
+      case 'google-slides':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#ff5722" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#ffab91" d="M40 13L30 13 30 3z"></path>
+            <path fill="#d84315" d="M30 13L40 23 40 13z"></path>
+            <path fill="#fff3e0" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15z"></path>
+            <rect fill="#ff5722" x="20" y="35" width="8" height="2" rx="1"></rect>
+            <circle fill="#ff5722" cx="24" cy="21" r="1.5"></circle>
+          </svg>
+        )
+      case 'smartsheet':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+            <circle fill="#2196f3" cx="18" cy="20" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="24" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="28" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="32" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="36" r="1"></circle>
+          </svg>
+        )
       default:
         return (
           <div className="flex items-center gap-2">
@@ -222,43 +252,21 @@ export default function CommercialTemplatesPage() {
             <div className="overflow-x-auto">
               <table className="w-full table-fixed">
                 <colgroup>
-                  <col className="w-1/2" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
+                  <col style={{ width: '70%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '15%' }} />
                 </colgroup>
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('title')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Template Name
-                        {getSortIcon('title')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('category')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Category
-                        {getSortIcon('category')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('downloads')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Downloads
-                        {getSortIcon('downloads')}
-                      </button>
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">
-                      Actions
-                    </th>
+                                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Template Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
                   </tr>
                 </thead>
               </table>
@@ -267,10 +275,9 @@ export default function CommercialTemplatesPage() {
               <div className="max-h-[483px] overflow-y-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col className="w-1/2" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
+                    <col style={{ width: '70%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '15%' }} />
                   </colgroup>
                   <tbody className="divide-y divide-gray-200">
                     {sortedTemplates.map((template, index) => (
@@ -286,20 +293,19 @@ export default function CommercialTemplatesPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-4 px-6">
-                          <span className="text-sm text-gray-900">{template.category}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className="text-sm text-gray-900">{template.downloads.toLocaleString()}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center justify-center gap-2">
-                            <button className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center gap-1 group cursor-pointer">
-                              <EyeIcon className="w-4 h-4 group-hover:stroke-gray-600" />
+                                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{template.category}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex items-center justify-center">
+                            <button 
+                              onClick={() => {
+                                if (template.viewLink) {
+                                  window.open(template.viewLink, '_blank')
+                                }
+                              }}
+                              className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1 group cursor-pointer"
+                            >
+                              <EyeIcon className="w-4 h-4 stroke-current group-hover:stroke-white" />
                               Preview
-                            </button>
-                            <button className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center justify-center group cursor-pointer">
-                              <ArrowDownTrayIcon className="w-4 h-4 group-hover:stroke-gray-600" />
                             </button>
                           </div>
                         </td>

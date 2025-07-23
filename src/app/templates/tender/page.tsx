@@ -8,7 +8,6 @@ import {
   DocumentTextIcon,
   ArrowLeftIcon,
   EyeIcon,
-  ArrowDownTrayIcon,
   ChevronUpIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline'
@@ -17,15 +16,18 @@ interface TenderTemplate {
   id: string
   title: string
   description: string
-  fileType: 'pdf' | 'docx' | 'xlsx'
+  fileType: 'pdf' | 'docx' | 'xlsx' | 'google-sheets' | 'google-docs' | 'google-slides' | 'smartsheet'
   category: string
   thumbnail?: string
   fileUrl?: string
   lastUpdated: string
-  downloads: number
+
+  viewLink?: string
+  copyLink?: string
+  isGoogleTemplate?: boolean
 }
 
-type SortField = 'title' | 'fileType' | 'category' | 'lastUpdated' | 'downloads'
+type SortField = 'title' | 'category'
 type SortDirection = 'asc' | 'desc'
 
 export default function TenderTemplatesPage() {
@@ -39,145 +41,177 @@ export default function TenderTemplatesPage() {
       id: 'cs01',
       title: 'CS01 - Cover Letter',
       description: 'Professional cover letter template for tender proposal introductions and company presentation',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-25',
-      downloads: 312
+      viewLink: 'https://docs.google.com/document/d/18nuKwld5HiL6IjHBwotw_95SvYSYowXEXscMDakWYtM/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/18nuKwld5HiL6IjHBwotw_95SvYSYowXEXscMDakWYtM/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs02',
       title: 'CS02 - Site Visit',
       description: 'Site visit documentation form for recording site conditions and assessment findings',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-25',
-      downloads: 287
+      viewLink: 'https://docs.google.com/document/d/18atPgHue122eIPwNd15l9Ztzs8Wbii2m07uBj5pQT-Q/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/18atPgHue122eIPwNd15l9Ztzs8Wbii2m07uBj5pQT-Q/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs03',
       title: 'CS03 - Board Resolution',
       description: 'Board resolution template authorizing tender submission and contract execution authority',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-25',
-      downloads: 298
+      viewLink: 'https://docs.google.com/document/d/1Aiun3B9Qr63hazNPeoEZBbGH37VngAv_m34_AgTHiBQ/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1Aiun3B9Qr63hazNPeoEZBbGH37VngAv_m34_AgTHiBQ/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs04',
       title: 'CS04 - Insurances',
       description: 'Insurance certification documentation including liability, workers compensation and professional indemnity',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-24',
-      downloads: 245
+      viewLink: 'https://docs.google.com/document/d/1RTdl5h7T4ADB-TTg6CqNuVV0x3Vu2YYncCPZWls26eY/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1RTdl5h7T4ADB-TTg6CqNuVV0x3Vu2YYncCPZWls26eY/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs05',
       title: 'CS05 - Sustainability',
       description: 'Sustainability policy and environmental management system documentation',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-24',
-      downloads: 267
+      viewLink: 'https://docs.google.com/document/d/1hHao-Bqn1Zb0lHys0G02KqfV83CLWqpgy7_3kJntPWs/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1hHao-Bqn1Zb0lHys0G02KqfV83CLWqpgy7_3kJntPWs/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs06',
       title: 'CS06 - Tax / VAT Clearance',
       description: 'Tax compliance certificates and VAT clearance documentation from relevant authorities',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-24',
-      downloads: 201
+      viewLink: 'https://docs.google.com/document/d/1VJ9fj9TE19VyAqfPh-5chaXx831myaJbzwKKw3U4fqQ/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1VJ9fj9TE19VyAqfPh-5chaXx831myaJbzwKKw3U4fqQ/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs07',
       title: 'CS07 - Shareholding / Sponsor',
       description: 'Shareholding structure and sponsor information documentation for tender proposals',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-23',
-      downloads: 289
+      viewLink: 'https://docs.google.com/document/d/104ZaSVA2QgROXTt8eZIfeKuCXYk0kMZf2rGBW4K24gY/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/104ZaSVA2QgROXTt8eZIfeKuCXYk0kMZf2rGBW4K24gY/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs08',
       title: 'CS08 - Company Registrations',
       description: 'Official company registration certificates and incorporation documents',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-23',
-      downloads: 234
+      viewLink: 'https://docs.google.com/document/d/1CBhixzWI8cYLYDVntNtBLDuS4-X-8nBaW0PP2x_KTsQ/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1CBhixzWI8cYLYDVntNtBLDuS4-X-8nBaW0PP2x_KTsQ/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs09',
       title: 'CS09 - Safety Certificates',
       description: 'Health and safety certifications including OHSAS, safety training and incident records',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-22',
-      downloads: 198
+      viewLink: 'https://docs.google.com/document/d/1RAFQGM5ADh1bl_-WX1QzDT6ElAsziEuXEgICxyAeRe4/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1RAFQGM5ADh1bl_-WX1QzDT6ElAsziEuXEgICxyAeRe4/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs10',
       title: 'CS10 - Corporate Social Responsibility (CSR)',
       description: 'CSR policies, community engagement initiatives and social impact documentation',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-22',
-      downloads: 156
+      viewLink: 'https://docs.google.com/document/d/1SgHbNADR--kRDLCZhqwbcBeqouqu_b6JVYLJLcLv4Sw/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1SgHbNADR--kRDLCZhqwbcBeqouqu_b6JVYLJLcLv4Sw/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs11',
       title: 'CS11 - ISO / Other Certifications',
       description: 'ISO certification documentation including quality, environmental and safety management systems',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-21',
-      downloads: 178
+      viewLink: 'https://docs.google.com/document/d/1ddzxZRJ0q5d6odxqf9_I3xuLp6w0DA4u6IB7GkXHq-Y/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1ddzxZRJ0q5d6odxqf9_I3xuLp6w0DA4u6IB7GkXHq-Y/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs12',
       title: 'CS12 - Who We Are',
       description: 'Company profile including history, capabilities, organizational structure and key personnel',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-21',
-      downloads: 223
+      viewLink: 'https://docs.google.com/document/d/1E4p-5rBO6zsaCNCKts1R2hYEOvy1jqPd8DYuJMofD2I/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1E4p-5rBO6zsaCNCKts1R2hYEOvy1jqPd8DYuJMofD2I/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs13',
       title: 'CS13 - Company Policies',
       description: 'Corporate policies including quality, safety, environmental and business conduct guidelines',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-20',
-      downloads: 145
+      viewLink: 'https://docs.google.com/document/d/1r1lS9S8WfSYBZ1d2lmZNVs-yqal2Xwmq3Ms-zYdCeWw/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1r1lS9S8WfSYBZ1d2lmZNVs-yqal2Xwmq3Ms-zYdCeWw/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs14',
       title: 'CS14 - Banking Information',
       description: 'Banking details, financial institution references and credit facility information',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-20',
-      downloads: 167
+      viewLink: 'https://docs.google.com/document/d/1S0OiM0SyKx_2eYfjZgYja6nJAx19bQHfr4YIP5t3aZg/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1S0OiM0SyKx_2eYfjZgYja6nJAx19bQHfr4YIP5t3aZg/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs15',
       title: 'CS15 - Brochure, Newsletter, Media',
       description: 'Marketing materials, company brochures, newsletters and media coverage documentation',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-19',
-      downloads: 189
+      viewLink: 'https://docs.google.com/document/d/1iAAOaeFR1fCiSMPtgBUaZ4zdGrirnaZpiBxD01hC-gY/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1iAAOaeFR1fCiSMPtgBUaZ4zdGrirnaZpiBxD01hC-gY/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'cs16',
       title: 'CS16 - Declaration & Code of Conduct',
       description: 'Formal declaration of compliance and code of conduct for tender proposals',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Contractors',
       lastUpdated: '2024-01-19',
-      downloads: 134
+      viewLink: 'https://docs.google.com/document/d/1hPdZriRlXgGUjcQcZzXIfk2ET_Y5I-M0L8q8NZYY4tU/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1hPdZriRlXgGUjcQcZzXIfk2ET_Y5I-M0L8q8NZYY4tU/copy',
+      isGoogleTemplate: true
     },
 
     // Technical Category - 13 documents
@@ -185,118 +219,144 @@ export default function TenderTemplatesPage() {
       id: 'ts01',
       title: 'TS01 - Project Execution Strategy',
       description: 'Comprehensive project execution strategy including methodology, approach and delivery framework',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-25',
-      downloads: 345
+      viewLink: 'https://docs.google.com/document/d/1Ca9j1IJJzcKTVwRh2u3rOZPlCr7Q_RjTCpmxPa4pDAI/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1Ca9j1IJJzcKTVwRh2u3rOZPlCr7Q_RjTCpmxPa4pDAI/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts02',
       title: 'TS02 - Proposed Project Team & CV\'s',
       description: 'Project team structure with detailed CVs showing roles, responsibilities and qualifications',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-24',
-      downloads: 289
+      viewLink: 'https://docs.google.com/document/d/1bkAewlBq0zdFbbZJOrCimPLuPAMZ1zEoOoFHwc9u00E/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1bkAewlBq0zdFbbZJOrCimPLuPAMZ1zEoOoFHwc9u00E/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts03',
       title: 'TS03 - Job Descriptions',
       description: 'Detailed job descriptions for key project positions including qualifications and experience requirements',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-24',
-      downloads: 234
+      viewLink: 'https://docs.google.com/document/d/1v6NUrKdkVytC3kCltLbfOwy6g8gdyswAZ4r_ZVPzc9Y/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1v6NUrKdkVytC3kCltLbfOwy6g8gdyswAZ4r_ZVPzc9Y/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts04',
       title: 'TS04 - Project Plan',
       description: 'Comprehensive project schedule with milestones, critical path and resource allocation timeline',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-23',
-      downloads: 398
+      viewLink: 'https://docs.google.com/document/d/1YbDHeRJcwOkyyVBukzXkpIVb1XhQR9Un0u3VjrEOEFw/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1YbDHeRJcwOkyyVBukzXkpIVb1XhQR9Un0u3VjrEOEFw/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts05',
       title: 'TS05 - Project Method Statements',
       description: 'Detailed method statements for key work activities including procedures and safety measures',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-23',
-      downloads: 267
+      viewLink: 'https://docs.google.com/document/d/1CZWKbgymvgZnmVvyfJ7nBJk2ntpd8lgkQntD31aTqAo/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1CZWKbgymvgZnmVvyfJ7nBJk2ntpd8lgkQntD31aTqAo/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts06',
       title: 'TS06 - Project Drawings / Renders',
       description: 'Technical drawings, schematics, renders and design documentation for project deliverables',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-22',
-      downloads: 201
+      viewLink: 'https://docs.google.com/document/d/1YCoh4eerp9ZPpwtWQwfhWOjbgAWjKPsh5kKIk_PpiDs/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1YCoh4eerp9ZPpwtWQwfhWOjbgAWjKPsh5kKIk_PpiDs/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts07',
       title: 'TS07 - Quality Assurance Plan & Checksheets',
       description: 'Quality assurance procedures, inspection protocols and quality control checksheets',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-22',
-      downloads: 189
+      viewLink: 'https://docs.google.com/document/d/1GtneT_GdJqlu6LT0aOyWl77DvXlVzSHjnKIj5w2ycZk/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1GtneT_GdJqlu6LT0aOyWl77DvXlVzSHjnKIj5w2ycZk/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts08',
       title: 'TS08 - HSE Plan & Baseline Risk Assessment',
       description: 'Health, safety and environmental management plan including baseline risk assessments',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-21',
-      downloads: 223
+      viewLink: 'https://docs.google.com/document/d/1o0EiHGjwY6fcwK3Ol4bhkXgy2G43-sprIVr6tmM4liE/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1o0EiHGjwY6fcwK3Ol4bhkXgy2G43-sprIVr6tmM4liE/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts09',
       title: 'TS09 - Subcontractor Strategy',
       description: 'Subcontractor management strategy including selection criteria and oversight procedures',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-21',
-      downloads: 312
+      viewLink: 'https://docs.google.com/document/d/1TY8eSVLauQO8MxfUStjEu5jumvJZTxJqY4XXgrrSj6E/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1TY8eSVLauQO8MxfUStjEu5jumvJZTxJqY4XXgrrSj6E/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts10',
       title: 'TS10 - Current Work Commitments',
       description: 'Current project portfolio and resource commitments demonstrating capacity and availability',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-20',
-      downloads: 156
+      viewLink: 'https://docs.google.com/document/d/1hPZ-Rufn_u2TJTmq4j35cQ1bvL3XrNC3q4fSBi0jRn4/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1hPZ-Rufn_u2TJTmq4j35cQ1bvL3XrNC3q4fSBi0jRn4/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts11',
       title: 'TS11 - Relevant Experience',
       description: 'Case studies and profiles of relevant projects demonstrating experience and capability',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-20',
-      downloads: 278
+      viewLink: 'https://docs.google.com/document/d/1smGOoA0ZnnqrvpbdzIFSpQyBz_AZQbyUCkU6j2DvjpI/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1smGOoA0ZnnqrvpbdzIFSpQyBz_AZQbyUCkU6j2DvjpI/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts12',
       title: 'TS12 - Recognitions / Awards',
       description: 'Industry awards, recognitions and achievements demonstrating excellence and competence',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-19',
-      downloads: 145
+      viewLink: 'https://docs.google.com/document/d/1aEa1kdozKf3OYyz9n5j9F0jK4iM2Dep_hB679blXac8/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1aEa1kdozKf3OYyz9n5j9F0jK4iM2Dep_hB679blXac8/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ts13',
       title: 'TS13 - Any Other Technical Information',
       description: 'Additional supporting technical information and documentation relevant to project capability',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Technical',
       lastUpdated: '2024-01-19',
-      downloads: 167
+      viewLink: 'https://docs.google.com/document/d/1PWCcTSqMkmusGVcYgHw7ZvaGMssk9_i4UIk8sgZVEqM/edit?tab=t.0#heading=h.gjdgxs',
+      copyLink: 'https://docs.google.com/document/d/1PWCcTSqMkmusGVcYgHw7ZvaGMssk9_i4UIk8sgZVEqM/copy',
+      isGoogleTemplate: true
     },
 
     // Pricing Category - 4 documents
@@ -304,37 +364,45 @@ export default function TenderTemplatesPage() {
       id: 'ps01',
       title: 'PS01 - Rates & Pricing',
       description: 'Detailed pricing schedule including unit rates, labor costs and equipment charges',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Pricing',
       lastUpdated: '2024-01-25',
-      downloads: 423
+      viewLink: 'https://docs.google.com/document/d/1VSKBoy8FtdsxqMs0sRw7z6-ni9OXF-MY7eFdb8h8Ub4/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1VSKBoy8FtdsxqMs0sRw7z6-ni9OXF-MY7eFdb8h8Ub4/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ps02',
       title: 'PS02 - Finance & Cash flow',
       description: 'Financial projections, cash flow analysis and payment schedule proposals',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Pricing',
       lastUpdated: '2024-01-24',
-      downloads: 356
+      viewLink: 'https://docs.google.com/document/d/1sRxVR_k6mj0GsEqHqdfD5-v8OUJ7E5TzJmJShxdgTEo/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1sRxVR_k6mj0GsEqHqdfD5-v8OUJ7E5TzJmJShxdgTEo/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ps03',
       title: 'PS03 - Commercial Alternatives',
       description: 'Alternative commercial proposals and value engineering options for cost optimization',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Pricing',
       lastUpdated: '2024-01-23',
-      downloads: 234
+      viewLink: 'https://docs.google.com/document/d/1yfv6HmiYCKqoz6QZSGx_oOi8K8lnR4EQbrYpEmybbj0/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1yfv6HmiYCKqoz6QZSGx_oOi8K8lnR4EQbrYpEmybbj0/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'ps04',
       title: 'PS04 - Commercial Clarifications',
       description: 'Commercial clarifications, assumptions and exclusions supporting the pricing submission',
-      fileType: 'pdf',
+      fileType: 'google-docs',
       category: 'Pricing',
       lastUpdated: '2024-01-22',
-      downloads: 189
+      viewLink: 'https://docs.google.com/document/d/12suJcWQ0UhqN9PI8kzOmi6klvVo7cNWeN_Bc9Vitdac/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/12suJcWQ0UhqN9PI8kzOmi6klvVo7cNWeN_Bc9Vitdac/copy',
+      isGoogleTemplate: true
     }
   ]
 
@@ -362,11 +430,7 @@ export default function TenderTemplatesPage() {
     let aValue: any = a[sortField]
     let bValue: any = b[sortField]
 
-    // Convert dates to comparable format
-    if (sortField === 'lastUpdated') {
-      aValue = new Date(aValue).getTime()
-      bValue = new Date(bValue).getTime()
-    }
+
 
     // Convert to string for consistent comparison
     if (typeof aValue === 'string') {
@@ -423,6 +487,49 @@ export default function TenderTemplatesPage() {
             <path d="M32,23c0.553,0,1,0.448,1,1v12c0,0.552-0.447,1-1,1H16c-0.553,0-1-0.448-1-1V24c0-0.552,0.447-1,1-1	H32 M32,22.5H16c-0.827,0-1.5,0.673-1.5,1.5v12c0,0.827,0.673,1.5,1.5,1.5h16c0.827,0,1.5-0.673,1.5-1.5V24	C33.5,23.173,32.827,22.5,32,22.5L32,22.5z" opacity=".07"></path>
           </svg>
         )
+      case 'google-sheets':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#43a047" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#c8e6c9" d="M40 13L30 13 30 3z"></path>
+            <path fill="#2e7d32" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e8f5e8" d="M31 23H17c-0.552 0-1 0.448-1 1v16c0 0.552 0.448 1 1 1h14c0.552 0 1-0.448 1-1V24C32 23.448 31.552 23 31 23zM20 26h3v3h-3V26zM20 30h3v3h-3V30zM20 34h3v3h-3V34zM26 26h3v3h-3V26zM26 30h3v3h-3V30zM26 34h3v3h-3V34z"></path>
+          </svg>
+        )
+      case 'google-docs':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+          </svg>
+        )
+      case 'google-slides':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#ff5722" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#ffab91" d="M40 13L30 13 30 3z"></path>
+            <path fill="#d84315" d="M30 13L40 23 40 13z"></path>
+            <path fill="#fff3e0" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15z"></path>
+            <rect fill="#ff5722" x="20" y="35" width="8" height="2" rx="1"></rect>
+            <circle fill="#ff5722" cx="24" cy="21" r="1.5"></circle>
+          </svg>
+        )
+      case 'smartsheet':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+            <circle fill="#2196f3" cx="18" cy="20" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="24" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="28" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="32" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="36" r="1"></circle>
+          </svg>
+        )
       default:
         return (
           <div className="flex items-center gap-2">
@@ -468,43 +575,21 @@ export default function TenderTemplatesPage() {
             <div className="overflow-x-auto">
               <table className="w-full table-fixed">
                 <colgroup>
-                  <col className="w-1/2" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
+                  <col style={{ width: '70%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '15%' }} />
                 </colgroup>
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('title')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Template Name
-                        {getSortIcon('title')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('category')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Category
-                        {getSortIcon('category')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('downloads')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Downloads
-                        {getSortIcon('downloads')}
-                      </button>
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">
-                      Actions
-                    </th>
+                                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Template Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
                   </tr>
                 </thead>
               </table>
@@ -513,10 +598,9 @@ export default function TenderTemplatesPage() {
               <div className="max-h-[483px] overflow-y-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col className="w-1/2" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
+                    <col style={{ width: '70%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '15%' }} />
                   </colgroup>
                   <tbody className="divide-y divide-gray-200">
                     {sortedTemplates.map((template, index) => (
@@ -536,16 +620,20 @@ export default function TenderTemplatesPage() {
                           <span className="text-sm text-gray-900">{template.category}</span>
                         </td>
                         <td className="py-4 px-6">
-                          <span className="text-sm text-gray-900">{template.downloads.toLocaleString()}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center justify-center gap-2">
-                            <button className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center gap-1 group cursor-pointer">
-                              <EyeIcon className="w-4 h-4 group-hover:stroke-gray-600" />
+                          <div className="flex items-center justify-center">
+                            <button 
+                              onClick={() => {
+                                if ((template.isGoogleTemplate || template.fileType === 'smartsheet') && template.viewLink) {
+                                  window.open(template.viewLink, '_blank')
+                                } else {
+                                  // Handle regular file preview
+                                  console.log('Preview regular file:', template.id)
+                                }
+                              }}
+                              className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1 group cursor-pointer"
+                            >
+                              <EyeIcon className="w-4 h-4 stroke-current group-hover:stroke-white" />
                               Preview
-                            </button>
-                            <button className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center justify-center group cursor-pointer">
-                              <ArrowDownTrayIcon className="w-4 h-4 group-hover:stroke-gray-600" />
                             </button>
                           </div>
                         </td>

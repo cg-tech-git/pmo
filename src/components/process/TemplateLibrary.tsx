@@ -243,7 +243,7 @@ export default function TemplateLibrary() {
                             {subcategoryKey.charAt(0).toUpperCase() + subcategoryKey.slice(1)}
                             <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
                               activeTenderTab === subcategoryKey 
-                                ? 'bg-blue-100 text-blue-600' 
+                                ? 'bg-blue-100 text-primary-600' 
                                 : 'bg-gray-100 text-gray-500'
                             }`}>
                               {category.subcategories?.[subcategoryKey]?.length || 0}

@@ -97,7 +97,7 @@ export default function ManpowerAllocationCalendar() {
                    <div className="mt-2">
                      <button
                        onClick={() => router.push(`/resources/manpower-allocation/calendar/details?date=${dateString}`)}
-                       className="bg-primary-600 text-white px-2 py-1 rounded-full text-xs hover:bg-gray-200 hover:text-gray-600 transition-colors w-full flex items-center justify-center gap-1"
+                       className="bg-blue-100 text-primary-600 px-2 py-1 rounded-full text-xs hover:bg-primary-600 hover:text-white transition-colors w-full flex items-center justify-center gap-1"
                      >
                        <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
                          <path fill="currentColor" d="M21,20h-1V3c0-0.6-0.4-1-1-1H5C4.4,2,4,2.4,4,3v17H3c-0.6,0-1,0.4-1,1s0.4,1,1,1h18c0.6,0,1-0.4,1-1S21.6,20,21,20z M9,6h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,8,8,7.6,8,7S8.4,6,9,6z M8,11c0-0.6,0.4-1,1-1h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,12,8,11.6,8,11z M15,20H9v-5c0-0.6,0.4-1,1-1h4c0.6,0,1,0.4,1,1V20z M15,12h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,12,15,12z M15,8h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,8,15,8z"></path>
@@ -128,14 +128,14 @@ export default function ManpowerAllocationCalendar() {
             </button>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Manpower Allocation Calendar</h1>
             <p className="text-gray-600">
-              View and manage manpower allocation schedules across different dates.
+              View and manage manpower allocation schedules across different dates. Click on any date to view or add allocations.
             </p>
           </div>
 
           {/* Calendar Container */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200">
             {/* Calendar Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="flex items-center justify-center py-2 border-b border-gray-200">
               <div className="flex items-center gap-4">
                 <button
                   onClick={goToPreviousMonth}
@@ -145,7 +145,7 @@ export default function ManpowerAllocationCalendar() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center h-9 leading-none relative" style={{top: '10px'}}>
+                <h2 className="text-xl font-semibold text-gray-900 flex items-center h-9 leading-none transform translate-y-2.5">
                   {monthNames[currentMonth]} {currentYear}
                 </h2>
                 <button
@@ -157,15 +157,6 @@ export default function ManpowerAllocationCalendar() {
                   </svg>
                 </button>
               </div>
-              <button
-                onClick={() => router.push('/resources/manpower-allocation')}
-                className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
-              >
-                <svg className="w-3 h-3" fill="white" viewBox="0 0 24 24">
-                  <path className="group-hover:fill-gray-600" d="M19,10.5v-1c0-2.8-1.6-5.2-4-6.3v3.3c0,0.6-0.5,1-1,1s-1-0.4-1-1V2.6c-0.4-0.1-0.8-0.1-1.2-0.1c-0.3,0-0.5,0-0.8,0.1v3.9c0,0.6-0.5,1-1,1s-1-0.4-1-1V3.2C6.6,4.4,5,7,5,9.8v0.7c-0.5,0-1,0.2-1.4,0.6C3.2,11.5,3,12,3,12.5c0,1.1,0.9,2,2,2h0c0,3.9,3.2,7.1,7.2,7c3.7-0.1,6.6-3.3,6.8-7h0c0.5,0,1-0.2,1.4-0.6c0.4-0.4,0.6-0.9,0.6-1.4C21,11.4,20.1,10.5,19,10.5z M12.1,19.5c-2.8,0.1-5.2-2.2-5.2-5h10C16.9,17.2,14.8,19.4,12.1,19.5z"></path>
-                </svg>
-                Back to Allocation
-              </button>
             </div>
 
             {/* Calendar Grid */}

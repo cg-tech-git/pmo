@@ -35,7 +35,7 @@ export default function ProcessesPage() {
       id: 'project-management' as ProcessType,
       title: 'Project Management Controls',
       description: 'Comprehensive project management control flowchart with gate reviews, milestones, and approval processes.',
-      file: 'https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/010.%20AL-OFF.FLOW-COMMERCIAL_%20Project%20Management%20Control%20R2%20(1)%20(1).pdf',
+      file: 'https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/templates%20-%20project%20-%20flowchart/010.%20AL-OFF.FLOW-COMMERCIAL_%20Project%20Management%20Control%20R2%20(1)%20(1).pdf',
       category: 'Project Management',
       lastUpdated: '2024-01-15',
       downloads: 245,
@@ -47,7 +47,7 @@ export default function ProcessesPage() {
       id: 'commercial' as ProcessType,
       title: 'Commercial Process Controls', 
       description: 'Commercial process workflow including contract management, approvals, and financial controls.',
-      file: 'https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/011.%20AL.OFF-FLOW_%20Commercial%20Process%20R2%20(1).pdf',
+      file: 'https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/templates%20-%20commercial%20-%20flowchart/011.%20AL.OFF-FLOW_%20Commercial%20Process%20R2%20(1).pdf',
       category: 'Commercial',
       lastUpdated: '2024-01-20',
       downloads: 189,
@@ -101,7 +101,7 @@ export default function ProcessesPage() {
               
               {/* Coming Soon Notice */}
               <div className="mt-4 flex gap-4">
-                <div className="bg-primary-600 text-white text-sm px-4 py-2 rounded-full font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors cursor-pointer">
+                <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium hover:bg-primary-600 hover:text-white transition-colors cursor-pointer">
                   Learn more
                 </div>
               </div>
@@ -139,47 +139,47 @@ export default function ProcessesPage() {
               {/* Action Buttons */}
               <div className="mt-8 flex justify-center gap-4 flex-wrap">
                 <button 
-                  onClick={() => window.open('https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/010.%20AL-OFF.FLOW-COMMERCIAL_%20Project%20Management%20Control%20R2%20(1)%20(1).pdf', '_blank')}
-                  className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
+                  onClick={() => window.open('https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/templates%20-%20project%20-%20flowchart/010.%20AL-OFF.FLOW-COMMERCIAL_%20Project%20Management%20Control%20R2%20(1)%20(1).pdf', '_blank')}
+                  className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="white" className="group-hover:fill-gray-600" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M13,17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2c0-0.6,0.4-1,1-1s1,0.4,1,1V17z M12,13c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S12.6,13,12,13z"></path>
+                    <path fill="currentColor" className="group-hover:fill-white" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M13,17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2c0-0.6,0.4-1,1-1s1,0.4,1,1V17z M12,13c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S12.6,13,12,13z"></path>
                   </svg>
                   Project Flowchart
                 </button>
                 <button 
-                  onClick={() => window.open('https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/011.%20AL.OFF-FLOW_%20Commercial%20Process%20R2%20(1).pdf', '_blank')}
-                  className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
+                  onClick={() => window.open('https://storage.googleapis.com/pmo-documents-hybrid-shine-466111-s0/templates%20-%20commercial%20-%20flowchart/011.%20AL.OFF-FLOW_%20Commercial%20Process%20R2%20(1).pdf', '_blank')}
+                  className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="white" className="group-hover:fill-gray-600" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M13,17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2c0-0.6,0.4-1,1-1s1,0.4,1,1V17z M12,13c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S12.6,13,12,13z"></path>
+                    <path fill="currentColor" className="group-hover:fill-white" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M13,17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2c0-0.6,0.4-1,1-1s1,0.4,1,1V17z M12,13c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S12.6,13,12,13z"></path>
                   </svg>
                   Commercial Flowchart
                 </button>
                 <button 
                   onClick={() => router.push('/templates/project')}
-                  className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
+                  className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="white" className="group-hover:fill-gray-600" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
+                    <path fill="currentColor" className="group-hover:fill-white" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
                   </svg>
                   Project Templates
                 </button>
                 <button 
                   onClick={() => router.push('/templates/commercial')}
-                  className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
+                  className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="white" className="group-hover:fill-gray-600" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
+                    <path fill="currentColor" className="group-hover:fill-white" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
                   </svg>
                   Commercial Templates
                 </button>
                 <button 
                   onClick={() => router.push('/templates/tender')}
-                  className="bg-primary-600 text-white px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-gray-200 hover:text-gray-600 transition-colors group cursor-pointer"
+                  className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="white" className="group-hover:fill-gray-600" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
+                    <path fill="currentColor" className="group-hover:fill-white" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M9,8h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9c-0.6,0-1-0.4-1-1S8.4,8,9,8z M15,18H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,18,15,18z M15,14H9c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S15.6,14,15,14z"></path>
                   </svg>
                   Tender Templates
                 </button>

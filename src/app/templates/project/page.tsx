@@ -8,7 +8,6 @@ import {
   DocumentTextIcon,
   ArrowLeftIcon,
   EyeIcon,
-  ArrowDownTrayIcon,
   ChevronUpIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline'
@@ -17,15 +16,20 @@ interface ProjectTemplate {
   id: string
   title: string
   description: string
-  fileType: 'pdf' | 'docx' | 'xlsx'
+  fileType: 'pdf' | 'docx' | 'xlsx' | 'google-sheets' | 'google-docs' | 'google-slides' | 'smartsheet'
   category: string
   thumbnail?: string
   fileUrl?: string
   lastUpdated: string
-  downloads: number
+
+  viewLink?: string
+  copyLink?: string
+  isGoogleTemplate?: boolean
 }
 
-type SortField = 'title' | 'fileType' | 'category' | 'lastUpdated' | 'downloads'
+
+
+type SortField = 'title' | 'category'
 type SortDirection = 'asc' | 'desc'
 
 export default function ProjectTemplatesPage() {
@@ -36,138 +40,157 @@ export default function ProjectTemplatesPage() {
   const projectTemplates: ProjectTemplate[] = [
     {
       id: 'pt-001',
-      title: 'Project Org. Chart',
-      description: 'Project organizational structure and hierarchy template for team roles and reporting',
-      fileType: 'docx',
-      category: 'Initiate',
+      title: 'Kickoff Checklist',
+      description: 'Comprehensive checklist for project kickoff and initiation activities',
+      fileType: 'google-sheets',
+      category: 'Planning',
       lastUpdated: '2024-01-15',
-      downloads: 234
+      viewLink: 'https://docs.google.com/spreadsheets/d/1gWP5_ZxQ759z1vSDHjFuGKTR58sg0c_LRLtLGGHEj_A/edit?gid=1976113351#gid=1976113351',
+      copyLink: 'https://docs.google.com/spreadsheets/d/1gWP5_ZxQ759z1vSDHjFuGKTR58sg0c_LRLtLGGHEj_A/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-002',
-      title: 'Kickoff Checklist',
-      description: 'Comprehensive project kickoff checklist ensuring all critical tasks are completed',
-      fileType: 'docx',
-      category: 'Initiate',
+      title: 'Project Org. Chart',
+      description: 'Project organizational structure and team hierarchy template',
+      fileType: 'xlsx',
+      category: 'Planning',
       lastUpdated: '2024-01-20',
-      downloads: 189
     },
     {
       id: 'pt-003',
-      title: 'Project Meeting Minutes',
-      description: 'Standardized meeting minutes template for project meetings and discussions',
-      fileType: 'docx',
-      category: 'Execute',
-      lastUpdated: '2024-01-18',
-      downloads: 312
+      title: 'Site Survey',
+      description: 'Detailed site survey template for project planning and design verification',
+      fileType: 'google-docs',
+      category: 'Planning',
+      lastUpdated: '2024-01-17',
+      viewLink: 'https://docs.google.com/document/d/1i9NsvX_38y01RtvD9M09gSQnV0J711Sm/edit',
+      copyLink: 'https://docs.google.com/document/d/1i9NsvX_38y01RtvD9M09gSQnV0J711Sm/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-004',
       title: 'Manpower Schedule',
-      description: 'Resource allocation and manpower scheduling template for project planning',
-      fileType: 'xlsx',
-      category: 'Plan',
-      lastUpdated: '2024-01-22',
-      downloads: 156
+      description: 'Comprehensive resource planning and scheduling template for project teams',
+      fileType: 'google-sheets',
+      category: 'Planning',
+      lastUpdated: '2024-01-15',
+      viewLink: 'https://docs.google.com/spreadsheets/d/113cIYflwTbAiY58KNc-Fj34_gsxXWYKLV5oEojmpGks/edit?gid=1173908919#gid=1173908919',
+      copyLink: 'https://docs.google.com/spreadsheets/d/113cIYflwTbAiY58KNc-Fj34_gsxXWYKLV5oEojmpGks/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-005',
-      title: 'Site Plot Plan',
-      description: 'Site layout and plot plan template for construction and field projects',
-      fileType: 'pdf',
-      category: 'Plan',
-      lastUpdated: '2024-01-16',
-      downloads: 198
+      title: 'Project Meeting Minutes',
+      description: 'Standard template for recording project meeting discussions and action items',
+      fileType: 'google-docs',
+      category: 'Planning',
+      lastUpdated: '2024-01-20',
+      viewLink: 'https://docs.google.com/document/d/1605H-EqMTpu5wzPExte9RdbcWJtFcyxMYNj85nQ1Vac/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1605H-EqMTpu5wzPExte9RdbcWJtFcyxMYNj85nQ1Vac/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-006',
       title: 'HSE Plan',
-      description: 'Health, Safety, and Environment plan template for project risk management',
-      fileType: 'docx',
-      category: 'Plan',
-      lastUpdated: '2024-01-25',
-      downloads: 267
+      description: 'Health, Safety and Environmental management plan template',
+      fileType: 'google-docs',
+      category: 'Execution',
+      lastUpdated: '2024-01-14',
+      viewLink: 'https://docs.google.com/document/d/18DV8nfRwKS8lDa-VPi9rfmwfjWDD1ZEagQ-4ehuET9A/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/18DV8nfRwKS8lDa-VPi9rfmwfjWDD1ZEagQ-4ehuET9A/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-007',
       title: 'Scaffolding Handover',
-      description: 'Scaffolding inspection and handover documentation template',
-      fileType: 'docx',
-      category: 'Execute',
-      lastUpdated: '2024-01-14',
-      downloads: 445
+      description: 'Scaffolding inspection and handover certificate template',
+      fileType: 'xlsx',
+      category: 'Execution',
+      lastUpdated: '2024-01-10',
     },
     {
       id: 'pt-008',
       title: 'Site Instructions',
-      description: 'Formal site instruction documentation and communication template',
-      fileType: 'docx',
-      category: 'Execute',
-      lastUpdated: '2024-01-19',
-      downloads: 123
+      description: 'Site instruction template for communicating project directives and changes',
+      fileType: 'google-docs',
+      category: 'Execution',
+      lastUpdated: '2024-01-18',
+      viewLink: 'https://docs.google.com/document/d/1P_uuyuVlNCYfh2ad3IBSwl-E3rgm-EQDqix4ANxKFiI/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1P_uuyuVlNCYfh2ad3IBSwl-E3rgm-EQDqix4ANxKFiI/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-009',
       title: 'Daily Diary',
-      description: 'Daily project diary template for tracking activities and progress',
-      fileType: 'docx',
-      category: 'Monitor',
-      lastUpdated: '2024-01-21',
-      downloads: 178
+      description: 'Daily project progress tracking and reporting template',
+      fileType: 'google-docs',
+      category: 'Execution',
+      lastUpdated: '2024-01-12',
+      viewLink: 'https://docs.google.com/document/d/1DmBRE0pyZTqvd2M1J-Fa38a450lRXUSxwaLLBJR7e1c/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1DmBRE0pyZTqvd2M1J-Fa38a450lRXUSxwaLLBJR7e1c/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-010',
-      title: 'Early Warning Notifications',
-      description: 'Early warning system template for identifying and escalating project risks',
-      fileType: 'docx',
-      category: 'Monitor',
-      lastUpdated: '2024-01-17',
-      downloads: 203
+      title: 'Early Warning Notification',
+      description: 'Early warning system template for identifying and managing project risks',
+      fileType: 'google-docs',
+      category: 'Execution',
+      lastUpdated: '2024-01-25',
+      viewLink: 'https://docs.google.com/document/d/19EIBybkTHuuaPfPnOhpzwFzCeizkTrMW7BM2B7GyRH8/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/19EIBybkTHuuaPfPnOhpzwFzCeizkTrMW7BM2B7GyRH8/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-011',
-      title: 'Certificate of Completion',
+      title: 'Certification of Completion',
       description: 'Project completion certificate template for milestone and project closure',
-      fileType: 'docx',
+      fileType: 'google-docs',
       category: 'Close',
       lastUpdated: '2024-01-23',
-      downloads: 89
+      viewLink: 'https://docs.google.com/document/d/1qZeSMqXYkP4J2JcJSBFOz_tdcC6z27nNgdFcVamHDC4/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1qZeSMqXYkP4J2JcJSBFOz_tdcC6z27nNgdFcVamHDC4/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-012',
       title: 'Close Out Report',
       description: 'Comprehensive project closeout report template with lessons learned',
-      fileType: 'docx',
+      fileType: 'google-docs',
       category: 'Close',
       lastUpdated: '2024-01-13',
-      downloads: 145
+      viewLink: 'https://docs.google.com/document/d/1hSfIrLgOe0aTVSh5fIT1Oexq32QMHrck9wk00jha0-w/edit?tab=t.0',
+      copyLink: 'https://docs.google.com/document/d/1hSfIrLgOe0aTVSh5fIT1Oexq32QMHrck9wk00jha0-w/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-013',
-      title: 'Customer Feedback Survey',
-      description: 'Customer satisfaction and feedback survey template for project evaluation',
-      fileType: 'docx',
+      title: 'Project Profiles',
+      description: 'Project profile template for documenting project overview and key details',
+      fileType: 'google-slides',
       category: 'Close',
       lastUpdated: '2024-01-24',
-      downloads: 167
+      viewLink: 'https://docs.google.com/presentation/d/1unQACq2-fEvkcjclLtpMk7EPNof0MUIYgrfbjkEsEXs/edit?slide=id.g21535015a20_0_107#slide=id.g21535015a20_0_107',
+      copyLink: 'https://docs.google.com/presentation/d/1unQACq2-fEvkcjclLtpMk7EPNof0MUIYgrfbjkEsEXs/copy',
+      isGoogleTemplate: true
     },
     {
       id: 'pt-014',
-      title: 'Awards Nomination',
+      title: 'Customer Feedback Survey',
+      description: 'Customer satisfaction and feedback survey template for project evaluation',
+      fileType: 'smartsheet',
+      category: 'Close',
+      lastUpdated: '2024-01-24',
+      viewLink: 'https://app.smartsheet.com/b/form/164e1070bb2b4eedbdb7c227e2027dbd',
+    },
+    {
+      id: 'pt-015',
+      title: 'Awards & Recognitions',
       description: 'Project awards nomination template for recognizing excellence and achievements',
       fileType: 'docx',
       category: 'Close',
       lastUpdated: '2024-01-12',
-      downloads: 134
-    },
-    {
-      id: 'pt-015',
-      title: 'Project Profile',
-      description: 'Comprehensive project profile template for documentation and presentation',
-      fileType: 'docx',
-      category: 'Close',
-      lastUpdated: '2024-01-26',
-      downloads: 98
     }
   ]
 
@@ -180,7 +203,7 @@ export default function ProjectTemplatesPage() {
     }
   }
 
-  const categoryOrder = ['Initiate', 'Plan', 'Execute', 'Monitor', 'Close']
+  const categoryOrder = ['Planning', 'Execution', 'Close']
 
   const sortedTemplates = [...projectTemplates].sort((a, b) => {
     // Primary sort by category order
@@ -195,11 +218,7 @@ export default function ProjectTemplatesPage() {
     let aValue: any = a[sortField]
     let bValue: any = b[sortField]
 
-    // Convert dates to comparable format
-    if (sortField === 'lastUpdated') {
-      aValue = new Date(aValue).getTime()
-      bValue = new Date(bValue).getTime()
-    }
+
 
     // Convert to string for consistent comparison
     if (typeof aValue === 'string') {
@@ -256,6 +275,49 @@ export default function ProjectTemplatesPage() {
             <path d="M32,23c0.553,0,1,0.448,1,1v12c0,0.552-0.447,1-1,1H16c-0.553,0-1-0.448-1-1V24c0-0.552,0.447-1,1-1	H32 M32,22.5H16c-0.827,0-1.5,0.673-1.5,1.5v12c0,0.827,0.673,1.5,1.5,1.5h16c0.827,0,1.5-0.673,1.5-1.5V24	C33.5,23.173,32.827,22.5,32,22.5L32,22.5z" opacity=".07"></path>
           </svg>
         )
+      case 'google-sheets':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#43a047" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#c8e6c9" d="M40 13L30 13 30 3z"></path>
+            <path fill="#2e7d32" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e8f5e8" d="M31 23H17c-0.552 0-1 0.448-1 1v16c0 0.552 0.448 1 1 1h14c0.552 0 1-0.448 1-1V24C32 23.448 31.552 23 31 23zM20 26h3v3h-3V26zM20 30h3v3h-3V30zM20 34h3v3h-3V34zM26 26h3v3h-3V26zM26 30h3v3h-3V30zM26 34h3v3h-3V34z"></path>
+          </svg>
+        )
+      case 'google-docs':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+          </svg>
+        )
+      case 'google-slides':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#ff5722" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#ffab91" d="M40 13L30 13 30 3z"></path>
+            <path fill="#d84315" d="M30 13L40 23 40 13z"></path>
+            <path fill="#fff3e0" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15z"></path>
+            <rect fill="#ff5722" x="20" y="35" width="8" height="2" rx="1"></rect>
+            <circle fill="#ff5722" cx="24" cy="21" r="1.5"></circle>
+          </svg>
+        )
+      case 'smartsheet':
+        return (
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#2196f3" d="M37,45H11c-1.657,0-3-1.343-3-3V6c0-1.657,1.343-3,3-3h19l10,10v29C40,43.657,38.657,45,37,45z"></path>
+            <path fill="#bbdefb" d="M40 13L30 13 30 3z"></path>
+            <path fill="#1565c0" d="M30 13L40 23 40 13z"></path>
+            <path fill="#e3f2fd" d="M15 19H33V21H15zM15 23H33V25H15zM15 27H33V29H15zM15 31H33V33H15zM15 35H25V37H15z"></path>
+            <circle fill="#2196f3" cx="18" cy="20" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="24" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="28" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="32" r="1"></circle>
+            <circle fill="#2196f3" cx="18" cy="36" r="1"></circle>
+          </svg>
+        )
       default:
         return (
           <div className="flex items-center gap-2">
@@ -301,43 +363,21 @@ export default function ProjectTemplatesPage() {
             <div className="overflow-x-auto">
               <table className="w-full table-fixed">
                 <colgroup>
-                  <col className="w-1/2" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
-                  <col className="w-1/6" />
+                  <col style={{ width: '70%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '15%' }} />
                 </colgroup>
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('title')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Template Name
-                        {getSortIcon('title')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('category')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Category
-                        {getSortIcon('category')}
-                      </button>
-                    </th>
-                    <th className="text-left py-4 px-6">
-                      <button 
-                        onClick={() => handleSort('downloads')}
-                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Downloads
-                        {getSortIcon('downloads')}
-                      </button>
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">
-                      Actions
-                    </th>
+                                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Template Name
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
                   </tr>
                 </thead>
               </table>
@@ -346,10 +386,9 @@ export default function ProjectTemplatesPage() {
                               <div className="max-h-[483px] overflow-y-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col className="w-1/2" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
-                    <col className="w-1/6" />
+                    <col style={{ width: '70%' }} />
+                    <col style={{ width: '15%' }} />
+                    <col style={{ width: '15%' }} />
                   </colgroup>
                   <tbody className="divide-y divide-gray-200">
                     {sortedTemplates.map((template, index) => (
@@ -369,16 +408,20 @@ export default function ProjectTemplatesPage() {
                           <span className="text-sm text-gray-900">{template.category}</span>
                         </td>
                         <td className="py-4 px-6">
-                          <span className="text-sm text-gray-900">{template.downloads.toLocaleString()}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center justify-center gap-2">
-                            <button className="bg-primary-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center gap-1 group cursor-pointer">
-                              <EyeIcon className="w-4 h-4 group-hover:stroke-gray-600" />
+                          <div className="flex items-center justify-center">
+                            <button 
+                              onClick={() => {
+                                if ((template.isGoogleTemplate || template.fileType === 'smartsheet') && template.viewLink) {
+                                  window.open(template.viewLink, '_blank')
+                                } else {
+                                  // Handle regular file preview
+                                  console.log('Preview regular file:', template.id)
+                                }
+                              }}
+                              className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1 group cursor-pointer"
+                            >
+                              <EyeIcon className="w-4 h-4 stroke-current group-hover:stroke-white" />
                               Preview
-                            </button>
-                            <button className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-200 hover:text-gray-600 transition-colors flex items-center justify-center group cursor-pointer">
-                              <ArrowDownTrayIcon className="w-4 h-4 group-hover:stroke-gray-600" />
                             </button>
                           </div>
                         </td>

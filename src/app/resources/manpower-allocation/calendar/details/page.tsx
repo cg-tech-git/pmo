@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSubmissionsByDate, type ManpowerSubmission } from '@/lib/submissionStorage'
 import MainLayout from '@/components/layout/MainLayout'
@@ -25,6 +25,18 @@ export default function ManpowerAllocationDetails() {
   // Search state
   const [searchQuery, setSearchQuery] = useState('')
   
+  // Dropdown states
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false)
+  const [showProjectNameDropdown, setShowProjectNameDropdown] = useState(false)
+  const [showProjectNumberDropdown, setShowProjectNumberDropdown] = useState(false)
+  const [showProjectManagerDropdown, setShowProjectManagerDropdown] = useState(false)
+  
+  // Dropdown refs
+  const customerDropdownRef = useRef<HTMLDivElement>(null)
+  const projectNameDropdownRef = useRef<HTMLDivElement>(null)
+  const projectNumberDropdownRef = useRef<HTMLDivElement>(null)
+  const projectManagerDropdownRef = useRef<HTMLDivElement>(null)
+  
   // Filter options
   const [filterOptions, setFilterOptions] = useState({
     customers: [] as string[],
@@ -32,6 +44,29 @@ export default function ManpowerAllocationDetails() {
     projectNumbers: [] as string[],
     projectManagers: [] as string[]
   })
+
+  // Click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (customerDropdownRef.current && !customerDropdownRef.current.contains(event.target as Node)) {
+        setShowCustomerDropdown(false)
+      }
+      if (projectNameDropdownRef.current && !projectNameDropdownRef.current.contains(event.target as Node)) {
+        setShowProjectNameDropdown(false)
+      }
+      if (projectNumberDropdownRef.current && !projectNumberDropdownRef.current.contains(event.target as Node)) {
+        setShowProjectNumberDropdown(false)
+      }
+      if (projectManagerDropdownRef.current && !projectManagerDropdownRef.current.contains(event.target as Node)) {
+        setShowProjectManagerDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     if (date) {
@@ -225,6 +260,7 @@ export default function ManpowerAllocationDetails() {
 
   return (
     <MainLayout>
+
       <div className="min-h-screen bg-gray-50">
         <div className="w-full px-6 py-6">
           {/* Page Header */}
@@ -240,12 +276,12 @@ export default function ManpowerAllocationDetails() {
               Manpower Allocation Submissions
             </h1>
             <p className="text-gray-600">
-              {date ? formatDate(date) : 'Selected Date'} • {filteredSubmissions.length} submission{filteredSubmissions.length !== 1 ? 's' : ''} {(filters.customer || filters.projectName || filters.projectNumber || filters.projectManager || searchQuery) ? '(filtered)' : ''}
+              Scroll to select and view manpower allocation reports.
             </p>
           </div>
 
           {/* Filters Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
+          <div className="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
             {/* Search Bar */}
             <div className="mb-4">
               <div className="relative">
@@ -283,63 +319,223 @@ export default function ManpowerAllocationDetails() {
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
+              <div className="relative" ref={customerDropdownRef}>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Customer</label>
-                <select
-                  value={filters.customer}
-                  onChange={(e) => handleFilterChange('customer', e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                <button
+                  type="button"
+                  onClick={() => setShowCustomerDropdown(!showCustomerDropdown)}
+                  className="w-full px-3 py-1.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between text-sm"
                 >
-                  <option value="">All Customers</option>
-                  {filterOptions.customers.map(customer => (
-                    <option key={customer} value={customer}>{customer}</option>
-                  ))}
-                </select>
+                  <span className={filters.customer ? 'text-gray-900' : 'text-gray-500'}>
+                    {filters.customer || 'All Customers'}
+                  </span>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showCustomerDropdown && (
+                  <div className="absolute top-full mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-full">
+                    <div className="max-h-40 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleFilterChange('customer', '')
+                          setShowCustomerDropdown(false)
+                        }}
+                        className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                          !filters.customer
+                            ? 'bg-blue-100 text-primary-600'
+                            : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        All Customers
+                      </button>
+                      {filterOptions.customers.map(customer => (
+                        <button
+                          key={customer}
+                          type="button"
+                          onClick={() => {
+                            handleFilterChange('customer', customer)
+                            setShowCustomerDropdown(false)
+                          }}
+                          className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                            filters.customer === customer
+                              ? 'bg-blue-100 text-primary-600'
+                              : 'hover:bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {customer}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
+              <div className="relative" ref={projectNameDropdownRef}>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Project Name</label>
-                <select
-                  value={filters.projectName}
-                  onChange={(e) => handleFilterChange('projectName', e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                <button
+                  type="button"
+                  onClick={() => setShowProjectNameDropdown(!showProjectNameDropdown)}
+                  className="w-full px-3 py-1.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between text-sm"
                 >
-                  <option value="">All Projects</option>
-                  {filterOptions.projectNames.map(name => (
-                    <option key={name} value={name}>{name}</option>
-                  ))}
-                </select>
+                  <span className={filters.projectName ? 'text-gray-900' : 'text-gray-500'}>
+                    {filters.projectName || 'All Projects'}
+                  </span>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showProjectNameDropdown && (
+                  <div className="absolute top-full mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-full">
+                    <div className="max-h-40 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleFilterChange('projectName', '')
+                          setShowProjectNameDropdown(false)
+                        }}
+                        className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                          !filters.projectName
+                            ? 'bg-blue-100 text-primary-600'
+                            : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        All Projects
+                      </button>
+                      {filterOptions.projectNames.map(name => (
+                        <button
+                          key={name}
+                          type="button"
+                          onClick={() => {
+                            handleFilterChange('projectName', name)
+                            setShowProjectNameDropdown(false)
+                          }}
+                          className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                            filters.projectName === name
+                              ? 'bg-blue-100 text-primary-600'
+                              : 'hover:bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
+              <div className="relative" ref={projectNumberDropdownRef}>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Project Number</label>
-                <select
-                  value={filters.projectNumber}
-                  onChange={(e) => handleFilterChange('projectNumber', e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                <button
+                  type="button"
+                  onClick={() => setShowProjectNumberDropdown(!showProjectNumberDropdown)}
+                  className="w-full px-3 py-1.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between text-sm"
                 >
-                  <option value="">All Numbers</option>
-                  {filterOptions.projectNumbers.map(number => (
-                    <option key={number} value={number}>{number}</option>
-                  ))}
-                </select>
+                  <span className={filters.projectNumber ? 'text-gray-900' : 'text-gray-500'}>
+                    {filters.projectNumber || 'All Numbers'}
+                  </span>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showProjectNumberDropdown && (
+                  <div className="absolute top-full mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-full">
+                    <div className="max-h-40 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleFilterChange('projectNumber', '')
+                          setShowProjectNumberDropdown(false)
+                        }}
+                        className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                          !filters.projectNumber
+                            ? 'bg-blue-100 text-primary-600'
+                            : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        All Numbers
+                      </button>
+                      {filterOptions.projectNumbers.map(number => (
+                        <button
+                          key={number}
+                          type="button"
+                          onClick={() => {
+                            handleFilterChange('projectNumber', number)
+                            setShowProjectNumberDropdown(false)
+                          }}
+                          className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                            filters.projectNumber === number
+                              ? 'bg-blue-100 text-primary-600'
+                              : 'hover:bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {number}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
+              <div className="relative" ref={projectManagerDropdownRef}>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Project Manager</label>
-                <select
-                  value={filters.projectManager}
-                  onChange={(e) => handleFilterChange('projectManager', e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                <button
+                  type="button"
+                  onClick={() => setShowProjectManagerDropdown(!showProjectManagerDropdown)}
+                  className="w-full px-3 py-1.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between text-sm"
                 >
-                  <option value="">All Managers</option>
-                  {filterOptions.projectManagers.map(manager => (
-                    <option key={manager} value={manager}>{manager}</option>
-                  ))}
-                </select>
+                  <span className={filters.projectManager ? 'text-gray-900' : 'text-gray-500'}>
+                    {filters.projectManager || 'All Managers'}
+                  </span>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showProjectManagerDropdown && (
+                  <div className="absolute top-full mt-1 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-full">
+                    <div className="max-h-40 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleFilterChange('projectManager', '')
+                          setShowProjectManagerDropdown(false)
+                        }}
+                        className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                          !filters.projectManager
+                            ? 'bg-blue-100 text-primary-600'
+                            : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        All Managers
+                      </button>
+                      {filterOptions.projectManagers.map(manager => (
+                        <button
+                          key={manager}
+                          type="button"
+                          onClick={() => {
+                            handleFilterChange('projectManager', manager)
+                            setShowProjectManagerDropdown(false)
+                          }}
+                          className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-colors ${
+                            filters.projectManager === manager
+                              ? 'bg-blue-100 text-primary-600'
+                              : 'hover:bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {manager}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Submissions Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-gray-50 rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full table-fixed">
                 <colgroup>
@@ -351,13 +547,13 @@ export default function ManpowerAllocationDetails() {
                   <col className="w-[13%]" />
                   <col className="w-[13%]" />
                 </colgroup>
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Submission Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Date</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Customer Name</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Project Name</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Project Number</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Project Manager</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Project</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">PM</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Employees</th>
                     <th className="text-center py-4 px-6 font-semibold text-gray-900">Actions</th>
                   </tr>
@@ -379,7 +575,7 @@ export default function ManpowerAllocationDetails() {
                   <tbody className="divide-y divide-gray-200">
                 {filteredSubmissions.length > 0 ? (
                   filteredSubmissions.map((submission, index) => (
-                    <tr key={submission.id} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
+                    <tr key={submission.id} className={`hover:bg-gray-100 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                       <td className="py-4 px-6">
                         <span className="text-sm text-gray-900">
                           {new Date(submission.submissionDate).toLocaleDateString('en-GB', {
@@ -422,9 +618,9 @@ export default function ManpowerAllocationDetails() {
                       <td className="py-4 px-6 text-center">
                         <button
                           onClick={() => handleViewPDF(submission)}
-                          className="bg-primary-600 text-white px-3 py-1 rounded-full text-sm hover:bg-gray-200 hover:text-gray-600 transition-colors inline-flex items-center gap-1 whitespace-nowrap"
+                          className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs hover:bg-primary-600 hover:text-white transition-colors inline-flex items-center gap-1 whitespace-nowrap"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
                             <path fill="currentColor" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M14.7,14.7C14.7,14.7,14.7,14.7,14.7,14.7c-0.4,0.4-1,0.4-1.4,0l0,0L13,14.4V17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2.6l-0.3,0.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2-2c0.4-0.4,1-0.4,1.4,0l2,2C15.1,13.7,15.1,14.3,14.7,14.7z"></path>
                           </svg>
                           View PDF
