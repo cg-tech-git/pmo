@@ -15,8 +15,8 @@ import Image from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
 
 const navigation = [
-  { name: 'Home', href: '/home' },
-  { name: 'Dashboard', href: '/' },
+  { name: 'Home', href: '/' },
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'Templates', href: '/processes' },
   { name: 'Projects', href: '/projects' },
   { name: 'Commercial', href: '/commercial' },

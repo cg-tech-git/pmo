@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 
 interface HeroSlide {
@@ -36,7 +37,7 @@ const heroSlides: HeroSlide[] = [
     alt: 'Dashboard Analytics',
     imageStyles: 'object-cover scale-75 translate-y-[3%] translate-x-[7%]',
     containerStyles: 'p-4',
-    buttonText: 'Coming soon'
+    buttonText: 'View dashboard'
   },
   {
     id: 'templates',
@@ -164,9 +165,17 @@ export default function RotatingHero() {
             
             {/* CTA Button */}
             <div className="mt-4 flex gap-4">
-              <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-primary-600 hover:text-white transition-colors">
+              <Link 
+                href={
+                  currentHero.id === 'dashboard' ? '/dashboard' :
+                  currentHero.id === 'templates' ? '/processes' :
+                  currentHero.id === 'resources' ? '/resources' :
+                  '#'
+                }
+                className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-primary-600 hover:text-white transition-colors inline-block"
+              >
                 {currentHero.buttonText}
-              </div>
+              </Link>
             </div>
           </div>
 

@@ -15,9 +15,9 @@ import {
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
-const navigation = [
-  { name: 'Home', href: '/home', icon: HomeIcon },
-  { name: 'Dashboard', href: '/', icon: ChartBarIcon },
+  const navigation = [
+    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
   { name: 'Projects', href: '/projects', icon: FolderIcon },
   { name: 'Resources', href: '/resources', icon: UsersIcon },
   { name: 'Commercial', href: '/commercial', icon: DocumentTextIcon },

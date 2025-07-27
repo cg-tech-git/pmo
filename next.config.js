@@ -6,6 +6,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
