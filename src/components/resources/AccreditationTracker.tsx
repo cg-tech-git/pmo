@@ -349,7 +349,7 @@ export default function AccreditationTracker() {
               <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
                 <path fill="currentColor" d="M16,1.4H4c-0.6,0-1,0.4-1,1v18c0,0.6,0.4,1,1,1h12c1.7,0,3-1.3,3-3v-14C19,2.8,17.7,1.4,16,1.4z M15,10.4c0,0.6-0.4,1-1,1H8c-0.6,0-1-0.4-1-1v-4c0-0.6,0.4-1,1-1h6c0.6,0,1,0.4,1,1V10.4z"></path>
               </svg>
-              Report Library
+              View Reports
             </button>
           </div>
         </div>
@@ -958,18 +958,18 @@ export default function AccreditationTracker() {
                     />
                   </div>
                   <div className="relative" ref={visaExpireDatePickerRef}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Visa Expire Date</label>
-                    <button
-                      type="button"
-                      onClick={() => setShowVisaExpireDatePicker(!showVisaExpireDatePicker)}
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between"
-                    >
-                      <span className={formData.visaExpireDate ? 'text-gray-900' : 'text-gray-500'}>
-                        {formData.visaExpireDate ? new Date(formData.visaExpireDate + 'T00:00:00').toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        }) : 'Select visa expire date'}
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Visa Expiry Date</label>
+                                          <button
+                        type="button"
+                        onClick={() => setShowVisaExpireDatePicker(!showVisaExpireDatePicker)}
+                        className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-left flex items-center justify-between"
+                      >
+                        <span className={formData.visaExpireDate ? 'text-gray-900' : 'text-gray-500'}>
+                          {formData.visaExpireDate ? new Date(formData.visaExpireDate + 'T00:00:00').toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          }) : 'Select visa expiry date'}
                       </span>
                       <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -1184,17 +1184,17 @@ export default function AccreditationTracker() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Groups Insurance Type</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Group Insurance Type</label>
                     <input
                       type="text"
                       value={formData.groupsInsuranceType}
                       onChange={(e) => setFormData({ ...formData, groupsInsuranceType: e.target.value })}
                       className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      placeholder="Enter groups insurance type"
+                      placeholder="Enter group insurance type"
                     />
                   </div>
                   <div className="relative" ref={groupsInsuranceStartDatePickerRef}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Groups Insurance Start Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Group Insurance Start Date</label>
                     <button
                       type="button"
                       onClick={() => setShowGroupsInsuranceStartDatePicker(!showGroupsInsuranceStartDatePicker)}
@@ -1221,7 +1221,7 @@ export default function AccreditationTracker() {
                     />
                   </div>
                   <div className="relative" ref={groupsInsuranceExpiryDatePickerRef}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Groups Insurance Expiry Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Group Insurance Expiry Date</label>
                     <button
                       type="button"
                       onClick={() => setShowGroupsInsuranceExpiryDatePicker(!showGroupsInsuranceExpiryDatePicker)}
@@ -1300,9 +1300,9 @@ export default function AccreditationTracker() {
                   onClick={() => router.push('/resources')}
                   className="bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                    <path fill="currentColor" d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M15.7,14.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0L12,13.4l-2.3,2.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2.3-2.3L8.3,9.7c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l2.3,2.3l2.3-2.3c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4L13.4,12L15.7,14.3z"></path>
-                  </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
+                        <path fill="currentColor" d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M15.7,14.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0L12,13.4l-2.3,2.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2.3-2.3L8.3,9.7c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l2.3,2.3l2.3-2.3c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4L13.4,12L15.7,14.3z"></path>
+                      </svg>
                   Cancel
                 </button>
 

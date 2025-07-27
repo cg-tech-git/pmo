@@ -25,7 +25,18 @@ export default function SignInPage() {
     try {
       const provider = new GoogleAuthProvider()
       
+      // Add Google Sheets and Drive scopes
+      provider.addScope('https://www.googleapis.com/auth/spreadsheets')
+      provider.addScope('https://www.googleapis.com/auth/drive.file')
+      
       const result = await signInWithPopup(auth, provider)
+      
+      // Store the Google access token for API usage
+      const credential = GoogleAuthProvider.credentialFromResult(result)
+      if (credential && credential.accessToken) {
+        sessionStorage.setItem('google_access_token', credential.accessToken)
+        console.log('Google access token stored')
+      }
       
       // Verify the user is from allowed organizations
       const email = result.user.email?.toLowerCase() || ''

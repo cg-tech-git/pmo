@@ -1,0 +1,80 @@
+[
+  {
+    "id": "test-123",
+    "date": "2025-01-24",
+    "submissionDate": "2025-01-24T10:00:00Z",
+    "data": {
+      "date": "2025-01-24",
+      "time": "10:00",
+      "jobNumber": "TEST-001",
+      "country": "UAE",
+      "division": "Test",
+      "camp": "Test",
+      "customer": "Test Customer",
+      "customerContact": "123-456-7890",
+      "projectName": "Test Project",
+      "projectManager": "Test PM",
+      "projectManagerContact": "098-765-4321",
+      "projectManagerEmail": "test@test.com",
+      "employees": [
+        {
+          "id": "1",
+          "employeeId": "EMP001",
+          "employeeName": "Test Employee",
+          "employeeGrade": "Senior"
+        }
+      ],
+      "crossHiredManpower": [
+        {
+          "id": "1",
+          "supplierName": "Test Supplier",
+          "contactNumber": "555-1234",
+          "manpowerTotal": "1"
+        }
+      ]
+    },
+    "pdfUrl": "#"
+  },
+  {
+    "id": "submission-1753340963696-0.1875021021492418",
+    "date": "2025-07-24",
+    "submissionDate": "2025-07-24T07:09:23.696Z",
+    "data": {
+      "date": "2025-07-24",
+      "time": "01:00",
+      "jobNumber": "32223",
+      "country": "United Arab Emirates",
+      "division": "Events",
+      "camp": "DIC",
+      "customer": "People Creative",
+      "customerContact": "8348383839",
+      "projectName": "National Day",
+      "projectManager": "Jozef Hrinko",
+      "projectManagerContact": "23823982398",
+      "projectManagerEmail": "jozef.hrinko@allaith.com",
+      "employees": [
+        {
+          "id": "1",
+          "employeeId": "3223",
+          "employeeName": "Majeed Irfan",
+          "employeeGrade": "G3"
+        },
+        {
+          "id": "1753340937395",
+          "employeeId": "8989",
+          "employeeName": "Mohamed Mohamed",
+          "employeeGrade": "G2"
+        }
+      ],
+      "crossHiredManpower": [
+        {
+          "id": "1",
+          "supplierName": "Manpower Supplies",
+          "contactNumber": "32893289982",
+          "manpowerTotal": "2"
+        }
+      ]
+    },
+    "pdfUrl": "blob:http://localhost:3000/45237779-3b6c-4838-9033-2de072d79766"
+  }
+]

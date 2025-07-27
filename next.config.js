@@ -58,7 +58,17 @@ const nextConfig = {
         net: false,
         tls: false,
         crypto: false,
+        dns: false,
+        child_process: false,
+        'puppeteer': false,
+        'puppeteer-core': false,
       }
+    }
+
+    // Exclude Puppeteer and related packages from client bundle
+    config.externals = config.externals || []
+    if (!isServer) {
+      config.externals.push('puppeteer', 'puppeteer-core')
     }
 
     // Fix for Firebase/undici compatibility issue

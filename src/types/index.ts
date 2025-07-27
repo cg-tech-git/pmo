@@ -240,4 +240,44 @@ export enum NotificationType {
   SUCCESS = 'success',
   WARNING = 'warning',
   ERROR = 'error',
+}
+
+// Manpower Allocation Types
+export interface Employee {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeGrade: string;
+}
+
+export interface CrossHiredManpower {
+  id: string;
+  supplierName: string;
+  contactNumber: string;
+  manpowerTotal: string;
+}
+
+export interface ManpowerSubmissionData {
+  date: string;
+  time: string;
+  jobNumber: string;
+  country: string;
+  division: string;
+  camp: string;
+  customer: string;
+  customerContact: string;
+  projectName: string;
+  projectManager: string;
+  projectManagerContact: string;
+  projectManagerEmail: string;
+  employees: Employee[];
+  crossHiredManpower: CrossHiredManpower[];
+}
+
+export interface ManpowerSubmission {
+  id: string;
+  date: string;
+  submissionDate: string;
+  data: ManpowerSubmissionData;
+  pdfUrl?: string;
 } 

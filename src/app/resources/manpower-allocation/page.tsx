@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import MainLayout from '@/components/layout/MainLayout'
 import { generateManpowerAllocationPDF } from '@/lib/pdfGenerator'
-import { saveSubmission, generateSubmissionId } from '@/lib/submissionStorage'
+import { saveSubmission } from '@/lib/manpowerApi'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import toast from 'react-hot-toast'
 
 interface Employee {
   id: string
@@ -174,34 +175,47 @@ export default function ManpowerAllocation() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Show immediate processing toast
+    const processingToast = toast.loading('Processing submission... Please wait', {
+      duration: Infinity, // Keep showing until we dismiss it
+    })
+    
     try {
-      // Generate PDF
-      const pdfUrl = generateManpowerAllocationPDF(formData)
+      // Generate PDF using new template system
+      const pdfUrl = await generateManpowerAllocationPDF(formData)
       
       // Create submission object
       const submission = {
-        id: generateSubmissionId(),
+        id: `submission-${Date.now()}-${Math.random()}`,
         date: formData.date,
         submissionDate: new Date().toISOString(),
         data: formData,
         pdfUrl: pdfUrl
       }
       
-      // Save submission to localStorage
-      saveSubmission(submission)
+      // Save submission to Excel file in GCS
+      await saveSubmission(submission)
+      
+      // Dismiss processing toast and show success
+      toast.dismiss(processingToast)
+      toast.success('Manpower allocation submitted successfully! Data saved to Excel and PDF report generated.', {
+        duration: 5000,
+      })
       
       // Open PDF in new tab
       window.open(pdfUrl, '_blank')
-      
-      // Show success message
-      alert('Manpower allocation submitted successfully! PDF report has been generated.')
       
       // Reset form to initial state
       setFormData(initialFormState)
       
     } catch (error) {
-      console.error('Error generating PDF:', error)
-      alert('Error generating PDF report. Please try again.')
+      console.error('Error saving submission:', error)
+      
+      // Dismiss processing toast and show error
+      toast.dismiss(processingToast)
+      toast.error('Error saving submission. Please try again.', {
+        duration: 5000,
+      })
     }
   }
 
@@ -224,7 +238,7 @@ export default function ManpowerAllocation() {
             <p className="text-gray-600">Create manpower allocation reports for project requirements and workforce planning.</p>
             
             {/* View Calendar Button */}
-            <div className="mt-4">
+            <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 onClick={() => router.push('/resources/manpower-allocation/calendar')}
@@ -234,6 +248,16 @@ export default function ManpowerAllocation() {
                   <path fill="currentColor" d="M19,2.9h-1v-1c0-0.6-0.4-1-1-1s-1,0.4-1,1v1H8v-1c0-0.6-0.4-1-1-1s-1,0.4-1,1v1H5c-1.7,0-3,1.3-3,3v14c0,1.7,1.3,3,3,3h14c1.7,0,3-1.3,3-3v-14C22,4.3,20.7,2.9,19,2.9z M7,18.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C8,18.5,7.6,18.9,7,18.9z M7,14.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C8,14.5,7.6,14.9,7,14.9z M12,18.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C13,18.5,12.6,18.9,12,18.9z M12,14.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C13,14.5,12.6,14.9,12,14.9z M17,18.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C18,18.5,17.6,18.9,17,18.9z M17,14.9c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C18,14.5,17.6,14.9,17,14.9z M20,8.9H4v-3c0-0.6,0.4-1,1-1h1v1c0,0.6,0.4,1,1,1s1-0.4,1-1v-1h8v1c0,0.6,0.4,1,1,1s1-0.4,1-1v-1h1c0.6,0,1,0.4,1,1V8.9z"></path>
                 </svg>
                 View Calendar
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/resources/manpower-allocation/calendar/details')}
+                className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1.5"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
+                  <path fill="currentColor" d="M21,20h-1V3c0-0.6-0.4-1-1-1H5C4.4,2,4,2.4,4,3v17H3c-0.6,0-1,0.4-1,1s0.4,1,1,1h18c0.6,0,1-0.4,1-1S21.6,20,21,20z M9,6h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,8,8,7.6,8,7S8.4,6,9,6z M8,11c0-0.6,0.4-1,1-1h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,12,8,11.6,8,11z M15,20H9v-5c0-0.6,0.4-1,1-1h4c0.6,0,1,0.4,1,1V20z M15,12h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,12,15,12z M15,8h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,8,15,8z"></path>
+                </svg>
+                View Projects
               </button>
             </div>
           </div>
@@ -746,7 +770,7 @@ export default function ManpowerAllocation() {
                     {formData.crossHiredManpower.map((manpower, index) => (
                       <div key={manpower.id} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Supplier Name</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Supplier</label>
                           <input
                             type="text"
                             value={manpower.supplierName}
@@ -756,7 +780,7 @@ export default function ManpowerAllocation() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Supplier Contact</label>
                           <input
                             type="text"
                             value={manpower.contactNumber}

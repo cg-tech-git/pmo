@@ -1,18 +1,18 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { getSubmissionsByDate, type ManpowerSubmission } from '@/lib/submissionStorage'
+import { useRouter } from 'next/navigation'
+import { getSubmissions, type ManpowerSubmission } from '@/lib/manpowerApi'
 import MainLayout from '@/components/layout/MainLayout'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import toast from 'react-hot-toast'
 
 export default function ManpowerAllocationDetails() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const date = searchParams.get('date')
   const [submissions, setSubmissions] = useState<ManpowerSubmission[]>([])
   const [filteredSubmissions, setFilteredSubmissions] = useState<ManpowerSubmission[]>([])
   const [loading, setLoading] = useState(true)
+  const [pdfLoading, setPdfLoading] = useState<string | null>(null)
   
   // Filter states
   const [filters, setFilters] = useState({
@@ -69,111 +69,52 @@ export default function ManpowerAllocationDetails() {
   }, [])
 
   useEffect(() => {
-    if (date) {
-      const daySubmissions = getSubmissionsByDate(date)
-      
-      // Add mock data for demonstration
-      const mockSubmissions: ManpowerSubmission[] = [
-        {
-          id: 'mock-1',
-          date: date,
-          submissionDate: new Date(date).toISOString(),
-          pdfUrl: '#',
-          data: {
-            date: date,
-            time: '09:00',
-            jobNumber: 'JOB-2024-001',
-            country: 'UAE',
-            division: 'Construction',
-            camp: 'Camp A',
-            customer: 'ABC Corporation',
-            customerContact: 'John Smith',
-            projectName: 'Tower Construction Phase 1',
-            projectManager: 'Sarah Johnson',
-            projectManagerContact: '+971 50 123 4567',
-            projectManagerEmail: 'sarah.j@example.com',
-            employees: [
-              { id: '1', employeeId: 'EMP001', employeeName: 'Ahmed Ali', employeeGrade: 'Senior' },
-              { id: '2', employeeId: 'EMP002', employeeName: 'Mohammed Hassan', employeeGrade: 'Junior' }
-            ],
-            crossHiredManpower: []
-          }
-        },
-        {
-          id: 'mock-2',
-          date: date,
-          submissionDate: new Date(date).toISOString(),
-          pdfUrl: '#',
-          data: {
-            date: date,
-            time: '10:30',
-            jobNumber: 'JOB-2024-002',
-            country: 'Saudi Arabia',
-            division: 'Infrastructure',
-            camp: 'Camp B',
-            customer: 'XYZ Engineering',
-            customerContact: 'David Brown',
-            projectName: 'Highway Expansion Project',
-            projectManager: 'Michael Chen',
-            projectManagerContact: '+966 55 987 6543',
-            projectManagerEmail: 'michael.c@example.com',
-            employees: [
-              { id: '3', employeeId: 'EMP003', employeeName: 'Ali Rahman', employeeGrade: 'Senior' },
-              { id: '4', employeeId: 'EMP004', employeeName: 'Khalid Omar', employeeGrade: 'Mid' },
-              { id: '5', employeeId: 'EMP005', employeeName: 'Hassan Ahmed', employeeGrade: 'Junior' }
-            ],
-            crossHiredManpower: [
-              { id: '1', supplierName: 'Tech Manpower Co.', contactNumber: '+971 4 555 1234', manpowerTotal: '5' }
-            ]
-          }
-        },
-        {
-          id: 'mock-3',
-          date: date,
-          submissionDate: new Date(date).toISOString(),
-          pdfUrl: '#',
-          data: {
-            date: date,
-            time: '14:15',
-            jobNumber: 'JOB-2024-003',
-            country: 'Qatar',
-            division: 'Maintenance',
-            camp: 'Camp C',
-            customer: 'Global Services Ltd',
-            customerContact: 'Emma Wilson',
-            projectName: 'Facility Maintenance Contract',
-            projectManager: 'Robert Davis',
-            projectManagerContact: '+974 33 456 7890',
-            projectManagerEmail: 'robert.d@example.com',
-            employees: [
-              { id: '6', employeeId: 'EMP006', employeeName: 'Ibrahim Khan', employeeGrade: 'Senior' }
-            ],
-            crossHiredManpower: []
-          }
-        }
-      ]
-      
-      // Combine real and mock data
-      const allSubmissions = [...daySubmissions, ...mockSubmissions]
-      setSubmissions(allSubmissions)
-      setFilteredSubmissions(allSubmissions)
-      
-      // Extract unique values for filter options
-      const customers = Array.from(new Set(allSubmissions.map(s => s.data.customer || 'N/A'))).sort()
-      const projectNames = Array.from(new Set(allSubmissions.map(s => s.data.projectName || s.data.project || 'N/A'))).sort()
-      const projectNumbers = Array.from(new Set(allSubmissions.map(s => s.data.jobNumber || 'N/A'))).sort()
-      const projectManagers = Array.from(new Set(allSubmissions.map(s => s.data.projectManager || 'N/A'))).sort()
-      
-      setFilterOptions({
-        customers,
-        projectNames,
-        projectNumbers,
-        projectManagers
-      })
-      
-      setLoading(false)
+    const loadSubmissions = async () => {
+      try {
+        setLoading(true)
+        console.log('Loading all submissions')
+        
+        const fetchedSubmissions = await getSubmissions()
+        
+        // Add mock data for demonstration
+        const mockSubmissions: ManpowerSubmission[] = []
+        
+        // Combine real and mock data  
+        const allSubmissions = [...fetchedSubmissions, ...mockSubmissions]
+        
+        // Sort by submission date in descending order (most recent first)
+        const sortedSubmissions = allSubmissions.sort((a, b) => {
+          const dateA = new Date(a.submissionDate);
+          const dateB = new Date(b.submissionDate);
+          return dateB.getTime() - dateA.getTime();
+        });
+        
+        setSubmissions(sortedSubmissions)
+        setFilteredSubmissions(sortedSubmissions)
+        
+        // Extract unique values for filter options
+        const customers = Array.from(new Set(allSubmissions.map(s => s.data.customer || 'N/A'))).sort()
+        const projectNames = Array.from(new Set(allSubmissions.map(s => s.data.projectName || 'N/A'))).sort()
+        const projectNumbers = Array.from(new Set(allSubmissions.map(s => s.data.jobNumber || 'N/A'))).sort()
+        const projectManagers = Array.from(new Set(allSubmissions.map(s => s.data.projectManager || 'N/A'))).sort()
+        
+        setFilterOptions({
+          customers,
+          projectNames,
+          projectNumbers,
+          projectManagers
+        })
+      } catch (error) {
+        console.error('Error loading submissions:', error)
+        toast.error('Failed to load submissions')
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [date])
+    
+    // Load submissions immediately without checking for date
+    loadSubmissions()
+  }, [])
   
   // Apply filters and search whenever they change
   useEffect(() => {
@@ -186,7 +127,6 @@ export default function ManpowerAllocationDetails() {
         const searchableFields = [
           s.data.customer,
           s.data.projectName,
-          s.data.project,
           s.data.jobNumber,
           s.data.projectManager,
           s.data.division,
@@ -196,7 +136,7 @@ export default function ManpowerAllocationDetails() {
             month: '2-digit',
             year: 'numeric'
           }).replace(/\//g, '/'),
-          ...(s.data.employees?.map(e => e.employeeName) || [])
+          ...(s.data.employees?.map((e: any) => e.employeeName) || [])
         ].filter(Boolean).map(field => field!.toLowerCase())
         
         return searchableFields.some(field => field.includes(query))
@@ -209,7 +149,7 @@ export default function ManpowerAllocationDetails() {
     }
     
     if (filters.projectName) {
-      filtered = filtered.filter(s => (s.data.projectName || s.data.project || 'N/A') === filters.projectName)
+      filtered = filtered.filter(s => (s.data.projectName || 'N/A') === filters.projectName)
     }
     
     if (filters.projectNumber) {
@@ -250,8 +190,70 @@ export default function ManpowerAllocationDetails() {
     })
   }
 
-  const handleViewPDF = (submission: ManpowerSubmission) => {
-    window.open(submission.pdfUrl, '_blank')
+  const handleViewPDF = async (submission: ManpowerSubmission) => {
+    try {
+      setPdfLoading(submission.id)
+      console.log('=== PDF Generation Debug ===')
+      console.log('Generating PDF for submission:', submission.id)
+      console.log('Submission data:', submission)
+      
+      // Call the PDF generation API directly
+      const response = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submission)
+      });
+
+      console.log('API Response status:', response.status)
+      console.log('API Response headers:', Object.fromEntries(response.headers))
+
+      if (!response.ok) {
+        throw new Error(`PDF generation failed: ${response.statusText}`);
+      }
+
+      // Create blob URL and open in new tab
+      const pdfBlob = await response.blob();
+      console.log('PDF Blob size:', pdfBlob.size, 'bytes')
+      console.log('PDF Blob type:', pdfBlob.type)
+      
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      console.log('Created blob URL:', blobUrl)
+      
+      // Try to open in new tab
+      const newWindow = window.open(blobUrl, '_blank');
+      console.log('window.open result:', newWindow)
+      
+      if (!newWindow) {
+        console.warn('Popup blocked! Trying alternative method...')
+        // Alternative: create download link
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `manpower-allocation-${submission.data.jobNumber || 'report'}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      
+      // Clean up blob URL after a delay
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+        console.log('Cleaned up blob URL');
+      }, 5000);
+      
+      console.log('PDF generation completed successfully')
+      toast.success('PDF generated successfully!', {
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Error generating PDF. Please try again.', {
+        duration: 4000,
+      })
+    } finally {
+      setPdfLoading(null)
+    }
   }
 
   if (loading) {
@@ -266,17 +268,17 @@ export default function ManpowerAllocationDetails() {
           {/* Page Header */}
           <div className="mb-6">
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push('/resources/manpower-allocation')}
               className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors cursor-pointer mb-2"
             >
               <ArrowLeftIcon className="w-4 h-4" />
-              Back to Calendar
+              Back to Manpower Allocation
             </button>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Manpower Allocation Submissions
+              Manpower Allocation Records
             </h1>
             <p className="text-gray-600">
-              Scroll to select and view manpower allocation reports.
+              Database records of all manpower allocation submissions with PDF reports.
             </p>
           </div>
 
@@ -592,7 +594,7 @@ export default function ManpowerAllocationDetails() {
                       </td>
                       <td className="py-4 px-6">
                         <span className="text-sm font-medium text-gray-900">
-                          {submission.data.projectName || submission.data.project || 'N/A'}
+                          {submission.data.projectName || 'N/A'}
                         </span>
                       </td>
                       <td className="py-4 px-6">
@@ -618,12 +620,29 @@ export default function ManpowerAllocationDetails() {
                       <td className="py-4 px-6 text-center">
                         <button
                           onClick={() => handleViewPDF(submission)}
-                          className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs hover:bg-primary-600 hover:text-white transition-colors inline-flex items-center gap-1 whitespace-nowrap"
+                          disabled={pdfLoading === submission.id}
+                          className={`px-3 py-1.5 rounded-full text-xs transition-colors inline-flex items-center gap-1 whitespace-nowrap ${
+                            pdfLoading === submission.id 
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                              : 'bg-blue-100 text-primary-600 hover:bg-primary-600 hover:text-white'
+                          }`}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                            <path fill="currentColor" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M14.7,14.7C14.7,14.7,14.7,14.7,14.7,14.7c-0.4,0.4-1,0.4-1.4,0l0,0L13,14.4V17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2.6l-0.3,0.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2-2c0.4-0.4,1-0.4,1.4,0l2,2C15.1,13.7,15.1,14.3,14.7,14.7z"></path>
-                          </svg>
-                          View PDF
+                          {pdfLoading === submission.id ? (
+                            <>
+                              <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
+                                <path fill="currentColor" d="M15,8h4.4L14,2.6V7C14,7.6,14.4,8,15,8z M15,10c-1.7,0-3-1.3-3-3V2H7C5.3,2,4,3.3,4,5v14c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3v-9H15z M14.7,14.7C14.7,14.7,14.7,14.7,14.7,14.7c-0.4,0.4-1,0.4-1.4,0l0,0L13,14.4V17c0,0.6-0.4,1-1,1s-1-0.4-1-1v-2.6l-0.3,0.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2-2c0.4-0.4,1-0.4,1.4,0l2,2C15.1,13.7,15.1,14.3,14.7,14.7z"></path>
+                              </svg>
+                              View PDF
+                            </>
+                          )}
                         </button>
                       </td>
                     </tr>

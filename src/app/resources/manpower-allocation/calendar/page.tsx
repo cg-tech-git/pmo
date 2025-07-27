@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import MainLayout from '@/components/layout/MainLayout'
-import { getSubmissionsByDate, ManpowerSubmission } from '@/lib/submissionStorage'
+import { getSubmissions, ManpowerSubmission } from '@/lib/manpowerApi'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export default function ManpowerAllocationCalendar() {
@@ -40,24 +40,39 @@ export default function ManpowerAllocationCalendar() {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1))
   }
 
-  // Load submissions for current month
+  // Load submissions for current month with debouncing
   useEffect(() => {
-    const loadSubmissions = () => {
-      const submissionsByDate: Record<string, ManpowerSubmission[]> = {}
-      const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-      
-      for (let day = 1; day <= daysInCurrentMonth; day++) {
-        const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-        const daySubmissions = getSubmissionsByDate(dateString)
-        if (daySubmissions.length > 0) {
-          submissionsByDate[dateString] = daySubmissions
-        }
+    const loadSubmissions = async () => {
+      try {
+        console.log('Loading submissions for month:', currentMonth + 1, 'year:', currentYear)
+        
+        // Get all submissions first, then filter by month
+        const allSubmissions = await getSubmissions()
+        const submissionsByDate: Record<string, ManpowerSubmission[]> = {}
+        
+        // Group submissions by date for the current month
+        allSubmissions.forEach((submission: ManpowerSubmission) => {
+          const submissionDate = new Date(submission.date)
+          if (submissionDate.getMonth() === currentMonth && submissionDate.getFullYear() === currentYear) {
+            const dateString = submission.date
+            if (!submissionsByDate[dateString]) {
+              submissionsByDate[dateString] = []
+            }
+            submissionsByDate[dateString].push(submission)
+          }
+        })
+        
+        console.log('Loaded submissions:', submissionsByDate)
+        setSubmissions(submissionsByDate)
+      } catch (error) {
+        console.error('Error loading submissions:', error)
+        setSubmissions({})
       }
-      
-      setSubmissions(submissionsByDate)
     }
     
-    loadSubmissions()
+    // Debounce the loading to avoid rapid API calls
+    const timeoutId = setTimeout(loadSubmissions, 100)
+    return () => clearTimeout(timeoutId)
   }, [currentMonth, currentYear])
 
 
@@ -96,13 +111,13 @@ export default function ManpowerAllocationCalendar() {
                  {daySubmissions.length > 0 && (
                    <div className="mt-2">
                      <button
-                       onClick={() => router.push(`/resources/manpower-allocation/calendar/details?date=${dateString}`)}
+                       onClick={() => router.push('/resources/manpower-allocation/calendar/details')}
                        className="bg-blue-100 text-primary-600 px-2 py-1 rounded-full text-xs hover:bg-primary-600 hover:text-white transition-colors w-full flex items-center justify-center gap-1"
                      >
                        <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
                          <path fill="currentColor" d="M21,20h-1V3c0-0.6-0.4-1-1-1H5C4.4,2,4,2.4,4,3v17H3c-0.6,0-1,0.4-1,1s0.4,1,1,1h18c0.6,0,1-0.4,1-1S21.6,20,21,20z M9,6h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,8,8,7.6,8,7S8.4,6,9,6z M8,11c0-0.6,0.4-1,1-1h1c0.6,0,1,0.4,1,1s-0.4,1-1,1H9C8.4,12,8,11.6,8,11z M15,20H9v-5c0-0.6,0.4-1,1-1h4c0.6,0,1,0.4,1,1V20z M15,12h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,12,15,12z M15,8h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1c0.6,0,1,0.4,1,1S15.6,8,15,8z"></path>
                        </svg>
-                       See Projects ({daySubmissions.length})
+                       View Projects ({daySubmissions.length})
                      </button>
                    </div>
                  )}
