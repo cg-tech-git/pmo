@@ -102,7 +102,7 @@ export default function ProcessesPage() {
               {/* Coming Soon Notice */}
               <div className="mt-4 flex gap-4">
                 <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium hover:bg-primary-600 hover:text-white transition-colors cursor-pointer">
-                  Learn more
+                  View templates
                 </div>
               </div>
             </div>

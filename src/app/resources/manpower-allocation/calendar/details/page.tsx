@@ -13,7 +13,11 @@ export default function ManpowerAllocationDetails() {
   const [filteredSubmissions, setFilteredSubmissions] = useState<ManpowerSubmission[]>([])
   const [loading, setLoading] = useState(true)
   const [pdfLoading, setPdfLoading] = useState<string | null>(null)
-  
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+
   // Filter states
   const [filters, setFilters] = useState({
     customer: '',
@@ -178,6 +182,25 @@ export default function ManpowerAllocationDetails() {
       projectManager: ''
     })
     setSearchQuery('')
+  }
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedSubmissions = filteredSubmissions.slice(startIndex, endIndex)
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, filters])
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page)
+      // Scroll to top of table
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   const formatDate = (dateString: string) => {
@@ -575,8 +598,8 @@ export default function ManpowerAllocationDetails() {
                     <col className="w-[13%]" />
                   </colgroup>
                   <tbody className="divide-y divide-gray-200">
-                {filteredSubmissions.length > 0 ? (
-                  filteredSubmissions.map((submission, index) => (
+                {paginatedSubmissions.length > 0 ? (
+                  paginatedSubmissions.map((submission, index) => (
                     <tr key={submission.id} className={`hover:bg-gray-100 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                       <td className="py-4 px-6">
                         <span className="text-sm text-gray-900">
@@ -650,13 +673,92 @@ export default function ManpowerAllocationDetails() {
                 ) : (
                   <tr>
                     <td colSpan={7} className="py-12 text-center text-gray-500">
-                      No submissions found for this date.
+                      {searchQuery || filters.projectName || filters.projectNumber || filters.projectManager || filters.customer
+                        ? 'No submissions found matching your filters'
+                        : 'No submissions available'}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
+          
+                         {/* Pagination Controls */}
+             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+               <div className="text-sm text-gray-700">
+                 Showing {filteredSubmissions.length === 0 ? 0 : startIndex + 1} to {Math.min(endIndex, filteredSubmissions.length)} of {filteredSubmissions.length} results
+               </div>
+               <div className="flex items-center gap-2">
+                 <button
+                   onClick={() => handlePageChange(currentPage - 1)}
+                   disabled={currentPage === 1 || totalPages === 0}
+                   className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
+                     currentPage === 1 || totalPages === 0
+                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                       : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                   }`}
+                 >
+                   Previous
+                 </button>
+                 
+                 {/* Page numbers */}
+                 <div className="flex items-center gap-1">
+                   {totalPages === 0 ? (
+                     <button
+                       disabled
+                       className="w-8 h-8 text-sm font-medium rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed"
+                     >
+                       1
+                     </button>
+                   ) : (
+                     Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                       // Show first page, last page, current page, and pages around current
+                       if (
+                         page === 1 ||
+                         page === totalPages ||
+                         (page >= currentPage - 1 && page <= currentPage + 1)
+                       ) {
+                         return (
+                           <button
+                             key={page}
+                             onClick={() => handlePageChange(page)}
+                             className={`w-8 h-8 text-sm font-medium rounded-lg ${
+                               page === currentPage
+                                 ? 'bg-primary-600 text-white'
+                                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                             }`}
+                           >
+                             {page}
+                           </button>
+                         )
+                       } else if (
+                         page === currentPage - 2 ||
+                         page === currentPage + 2
+                       ) {
+                         return (
+                           <span key={page} className="px-1 text-gray-400">
+                             ...
+                           </span>
+                         )
+                       }
+                       return null
+                     })
+                   )}
+                 </div>
+                 
+                 <button
+                   onClick={() => handlePageChange(currentPage + 1)}
+                   disabled={currentPage === totalPages || totalPages === 0}
+                   className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
+                     currentPage === totalPages || totalPages === 0
+                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                       : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                   }`}
+                 >
+                   Next
+                 </button>
+               </div>
+             </div>
           </div>
         </div>
         </div>

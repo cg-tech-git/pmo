@@ -25,7 +25,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/puzzle.png',
     alt: 'PMO Management',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Sign Up'
+    buttonText: 'Coming soon'
   },
   {
     id: 'dashboard',
@@ -36,7 +36,7 @@ const heroSlides: HeroSlide[] = [
     alt: 'Dashboard Analytics',
     imageStyles: 'object-cover scale-75 translate-y-[3%] translate-x-[7%]',
     containerStyles: 'p-4',
-    buttonText: 'Learn more'
+    buttonText: 'Coming soon'
   },
   {
     id: 'templates',
@@ -46,7 +46,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/templatesbanner.png',
     alt: 'Process Templates',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Learn more'
+    buttonText: 'View templates'
   },
   {
     id: 'projects',
@@ -56,7 +56,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/puzzle.png',
     alt: 'Project Management',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Learn more'
+    buttonText: 'Coming soon'
   },
   {
     id: 'commercial',
@@ -66,7 +66,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/commbanner.png',
     alt: 'Commercial Analytics',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Learn more'
+    buttonText: 'Coming soon'
   },
   {
     id: 'resources',
@@ -76,7 +76,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/resourcesbanner.png',
     alt: 'Resource Management',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Learn more'
+    buttonText: 'View resources'
   },
   {
     id: 'reports',
@@ -86,7 +86,7 @@ const heroSlides: HeroSlide[] = [
     image: '/images/repobanner.png',
     alt: 'Reports Analytics',
     imageStyles: 'object-cover scale-90 -translate-y-[2%]',
-    buttonText: 'Learn more'
+    buttonText: 'Coming soon'
   }
 ]
 

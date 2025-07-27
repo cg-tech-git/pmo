@@ -9,7 +9,7 @@ import {
   XMarkIcon,
   CogIcon,
 } from '@heroicons/react/24/outline'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
@@ -32,9 +32,12 @@ interface HeaderProps {
 
 export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMobileMenu }: HeaderProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { user, signOut, loading } = useAuth()
   const [avatarError, setAvatarError] = useState(false)
   const [dropdownAvatarError, setDropdownAvatarError] = useState(false)
+  const [expiredCount, setExpiredCount] = useState(0)
+  const [loadingExpiredCount, setLoadingExpiredCount] = useState(true)
   
   // Debug in useEffect to ensure it runs on client side
   useEffect(() => {
@@ -54,6 +57,54 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
     setAvatarError(false)
     setDropdownAvatarError(false)
   }, [user, loading])
+
+  // Fetch expired count for notifications - same logic as AccreditationTracker
+  useEffect(() => {
+    const fetchExpiredCount = async () => {
+      try {
+        const response = await fetch('/api/accreditation-submissions')
+        const data = await response.json()
+        
+        if (data.submissions) {
+          const today = new Date()
+          let expiredTotal = 0
+          
+          // Same expiry fields as AccreditationTracker
+          const expiryFields = [
+            { field: 'molExpiryDate', type: 'MOL' },
+            { field: 'emiratesIdExpiryDate', type: 'Emirates ID' },
+            { field: 'passportExpiryDate', type: 'Passport' },
+            { field: 'visaExpireDate', type: 'Visa' },
+            { field: 'certificateExpiryDate', type: 'Certificate' },
+            { field: 'groupsInsuranceExpiryDate', type: 'Group Insurance' }
+          ]
+          
+          data.submissions.forEach((submission: any) => {
+            expiryFields.forEach(({ field }) => {
+              if (submission[field]) {
+                const expiryDate = new Date(submission[field])
+                if (today > expiryDate) {
+                  expiredTotal++
+                }
+              }
+            })
+          })
+          
+          setExpiredCount(expiredTotal)
+        }
+      } catch (error) {
+        console.error('Failed to fetch expired count:', error)
+      } finally {
+        setLoadingExpiredCount(false)
+      }
+    }
+
+    fetchExpiredCount()
+    
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchExpiredCount, 5 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <>
@@ -155,14 +206,17 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
             {/* Enhanced Notifications */}
             <button
               type="button"
+              onClick={() => router.push('/resources/accreditation-tracker/expiry-alerts')}
               className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
             >
               <span className="sr-only">View notifications</span>
               <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
                 <path fill="currentColor" d="M18,13.2V10c0-2.9-2.1-5.4-5-5.9V3c0-0.6-0.4-1-1-1s-1,0.4-1,1v1.1c-2.9,0.5-5,3-5,5.9v3.2c-1.2,0.4-2,1.5-2,2.8v2c0,0.6,0.4,1,1,1h3.1c0.5,2.1,2.7,3.4,4.8,2.9c1.4-0.4,2.5-1.5,2.9-2.9H19c0.6,0,1-0.4,1-1v-2C20,14.7,19.2,13.6,18,13.2z M12,20c-0.7,0-1.4-0.4-1.7-1h3.5C13.4,19.6,12.7,20,12,20z"></path>
               </svg>
-              {/* Notification Badge */}
-              <div className="absolute -top-1 -right-1 h-3 w-3 bg-error-500 rounded-full border-2 border-white" />
+              {/* Notification Indicator - Red Dot */}
+              {!loadingExpiredCount && expiredCount > 0 && (
+                <div className="absolute top-[9px] right-[11px] h-[8px] w-[8px] bg-red-500 rounded-full ring-1 ring-white z-10" />
+              )}
             </button>
 
             {/* Settings */}

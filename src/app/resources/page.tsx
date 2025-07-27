@@ -31,7 +31,7 @@ export default function Resources() {
               {/* Coming Soon Notice */}
               <div className="mt-4 flex gap-4">
                 <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium hover:bg-primary-600 hover:text-white transition-colors cursor-pointer">
-                  Learn more
+                  View resources
                 </div>
               </div>
             </div>
@@ -85,24 +85,39 @@ export default function Resources() {
                   </svg>
                   Manpower Accreditation
                 </button>
-                <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="currentColor" className="group-hover:fill-white" d="M22.9,12.4l-2.4-3.2C19.9,8.4,19,8,18.1,8h-2V6c0-1.7-1.3-3-3-3h-9c-1.7,0-3,1.3-3,3v12c0,0.6,0.4,1,1,1h1c0,1.7,1.3,3,3,3s3-1.3,3-3h6c0,1.7,1.3,3,3,3s3-1.3,3-3h1c0.6,0,1-0.4,1-1v-5C23.1,12.8,23,12.6,22.9,12.4z M6.1,20c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C7.1,19.6,6.6,20,6.1,20z M18.1,20c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C19.1,19.6,18.6,20,18.1,20z M16.1,12v-2h2c0.3,0,0.6,0.1,0.8,0.4l1.2,1.6H16.1z"></path>
-                  </svg>
-                  PMV Accreditation
-                </button>
-                <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="currentColor" className="group-hover:fill-white" d="M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z"></path>
-                  </svg>
-                  Material Request
-                </button>
-                <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
-                    <path fill="currentColor" className="group-hover:fill-white" d="M21.7,15.7l-4.6-4.6c0.3-1.3,0.2-2.6-0.2-3.9c-1.3-4-5.6-6.2-9.6-4.9C7.2,2.4,7,2.5,6.9,2.6c-0.4,0.4-0.4,1,0,1.4l4.4,4.4l-2.8,2.8L4.1,6.9C4,6.7,3.8,6.7,3.7,6.6C3.2,6.4,2.6,6.7,2.4,7.2C2,8.5,1.9,9.9,2.2,11.2c0.8,4.1,4.9,6.8,9,6l4.6,4.6c0.4,0.4,1,0.4,1.4,0l4.6-4.6C22.1,16.7,22.1,16.1,21.7,15.7z"></path>
-                  </svg>
-                  Equipment Request
-                </button>
+                <div className="relative group">
+                  <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
+                      <path fill="currentColor" className="group-hover:fill-white" d="M22.9,12.4l-2.4-3.2C19.9,8.4,19,8,18.1,8h-2V6c0-1.7-1.3-3-3-3h-9c-1.7,0-3,1.3-3,3v12c0,0.6,0.4,1,1,1h1c0,1.7,1.3,3,3,3s3-1.3,3-3h6c0,1.7,1.3,3,3,3s3-1.3,3-3h1c0.6,0,1-0.4,1-1v-5C23.1,12.8,23,12.6,22.9,12.4z M6.1,20c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C7.1,19.6,6.6,20,6.1,20z M18.1,20c-0.6,0-1-0.4-1-1c0-0.6,0.4-1,1-1s1,0.4,1,1C19.1,19.6,18.6,20,18.1,20z M16.1,12v-2h2c0.3,0,0.6,0.1,0.8,0.4l1.2,1.6H16.1z"></path>
+                    </svg>
+                    PMV Accreditation
+                  </button>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
+                    Coming soon
+                  </div>
+                </div>
+                <div className="relative group">
+                  <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
+                      <path fill="currentColor" className="group-hover:fill-white" d="M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z"></path>
+                    </svg>
+                    Material Request
+                  </button>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
+                    Coming soon
+                  </div>
+                </div>
+                <div className="relative group">
+                  <button className="bg-blue-100 text-primary-600 px-3 py-2 rounded-full text-xs font-medium flex items-center gap-1 hover:bg-primary-600 hover:text-white transition-colors group cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3 h-3">
+                      <path fill="currentColor" className="group-hover:fill-white" d="M21.7,15.7l-4.6-4.6c0.3-1.3,0.2-2.6-0.2-3.9c-1.3-4-5.6-6.2-9.6-4.9C7.2,2.4,7,2.5,6.9,2.6c-0.4,0.4-0.4,1,0,1.4l4.4,4.4l-2.8,2.8L4.1,6.9C4,6.7,3.8,6.7,3.7,6.6C3.2,6.4,2.6,6.7,2.4,7.2C2,8.5,1.9,9.9,2.2,11.2c0.8,4.1,4.9,6.8,9,6l4.6,4.6c0.4,0.4,1,0.4,1.4,0l4.6-4.6C22.1,16.7,22.1,16.1,21.7,15.7z"></path>
+                    </svg>
+                    Equipment Request
+                  </button>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
+                    Coming soon
+                  </div>
+                </div>
               </div>
             </div>
           </div>

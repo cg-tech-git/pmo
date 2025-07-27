@@ -25,7 +25,7 @@ export default function ProjectsPage() {
               {/* Coming Soon Notice */}
               <div className="mt-4 flex gap-4">
                 <div className="bg-blue-100 text-primary-600 text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-primary-600 hover:text-white transition-colors">
-                  Learn more
+                  Coming soon
                 </div>
               </div>
             </div>

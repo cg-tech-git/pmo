@@ -33,6 +33,63 @@ export default function AccreditationTracker() {
                       'July', 'August', 'September', 'October', 'November', 'December']
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
+  // State for expired records count
+  const [expiredCount, setExpiredCount] = useState(0)
+  const [loadingExpiredCount, setLoadingExpiredCount] = useState(true)
+
+  // Fetch expired records count on component mount
+  useEffect(() => {
+    const fetchExpiredCount = async () => {
+      try {
+        setLoadingExpiredCount(true)
+        
+        // Fetch accreditation submissions
+        const response = await fetch('/api/accreditation-submissions')
+        const data = await response.json()
+        
+        if (data.submissions) {
+          // Count expired records
+          const today = new Date()
+          let expiredTotal = 0
+          
+          // Document types with expiry dates
+          const expiryFields = [
+            { field: 'molExpiryDate', type: 'MOL' },
+            { field: 'emiratesIdExpiryDate', type: 'Emirates ID' },
+            { field: 'passportExpiryDate', type: 'Passport' },
+            { field: 'visaExpireDate', type: 'Visa' },
+            { field: 'certificateExpiryDate', type: 'Certificate' },
+            { field: 'groupsInsuranceExpiryDate', type: 'Group Insurance' }
+          ]
+          
+          data.submissions.forEach((submission: any) => {
+            expiryFields.forEach(({ field }) => {
+              if (submission[field]) {
+                const expiryDate = new Date(submission[field])
+                // Only count if today's date is greater than expiry date (document has expired)
+                if (today > expiryDate) {
+                  expiredTotal++
+                }
+              }
+            })
+          })
+          
+          console.log('Total expired documents found:', expiredTotal)
+          console.log('Total submissions:', data.submissions.length)
+          
+          // Use the actual count from the Excel file
+          setExpiredCount(expiredTotal)
+        }
+      } catch (error) {
+        console.error('Error fetching expired count:', error)
+      } finally {
+        setLoadingExpiredCount(false)
+      }
+    }
+    
+    fetchExpiredCount()
+  }, [])
+
   // State for form data
   const [formData, setFormData] = useState({
     // Personal Information
@@ -344,12 +401,28 @@ export default function AccreditationTracker() {
             </button>
             <button
               type="button"
+              onClick={() => router.push('/resources/accreditation-tracker/reports')}
               className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1.5"
             >
               <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
                 <path fill="currentColor" d="M16,1.4H4c-0.6,0-1,0.4-1,1v18c0,0.6,0.4,1,1,1h12c1.7,0,3-1.3,3-3v-14C19,2.8,17.7,1.4,16,1.4z M15,10.4c0,0.6-0.4,1-1,1H8c-0.6,0-1-0.4-1-1v-4c0-0.6,0.4-1,1-1h6c0.6,0,1,0.4,1,1V10.4z"></path>
               </svg>
               View Reports
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push('/resources/accreditation-tracker/expiry-alerts')}
+              className="bg-blue-100 text-primary-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary-600 hover:text-white transition-colors flex items-center gap-1.5 relative"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3.5 h-3.5">
+                <path fill="currentColor" d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z"/>
+              </svg>
+              Expiry Alerts
+              {!loadingExpiredCount && expiredCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {expiredCount > 99 ? '99+' : expiredCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -1301,7 +1374,7 @@ export default function AccreditationTracker() {
                   className="bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5"
                 >
                                                             <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                        <path fill="currentColor" d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M15.7,14.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0L12,13.4l-2.3,2.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2.3-2.3L8.3,9.7c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l2.3,2.3l2.3-2.3c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4L13.4,12L15.7,14.3z"></path>
+                        <path fill="currentColor" d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M15.7,14.3c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0L12,13.4l-2.3,2.3c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l2.3-2.3L8.3,9.7c-0.4-0.4-0.4-1,0-1.4c0.4-0.4,1-0.4,1.4,0l2.3,2.3l2.3-2.3c0.4-0.4,1-0.4,1.4,0c0.4,0.4,0.4,1,0,1.4L13.4,12L15.7,14.3z"></path>
                       </svg>
                   Cancel
                 </button>

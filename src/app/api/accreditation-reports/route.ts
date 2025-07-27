@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAccreditationSubmissions } from '@/lib/accreditationExcelStorage';
 import { createGoogleSheet } from '@/lib/googleSheetsService';
+import { addReportToHistory } from '@/lib/reportHistoryStorage';
+import { auth } from '@/lib/firebase';
 const XLSX = require('xlsx');
 const ExcelJS = require('exceljs');
 
@@ -405,11 +407,30 @@ export async function POST(request: NextRequest) {
       // Generate buffer
       const buffer = await workbook.xlsx.writeBuffer();
       
+      // Get user ID from request headers (you might get this differently based on your auth setup)
+      const userId = request.headers.get('x-user-id') || 'anonymous';
+      
+      // Save report metadata to history
+      const fileName = `accreditation-report-${new Date().toISOString().split('T')[0]}.xlsx`;
+      try {
+        await addReportToHistory({
+          userId,
+          fileName,
+          employeeCount: filteredSubmissions.length,
+          fieldCount: selectedFields.length,
+          fileSize: buffer.length
+        });
+        console.log('Report saved to history');
+      } catch (error) {
+        console.error('Failed to save report to history:', error);
+        // Don't fail the request if history saving fails
+      }
+      
       // Return Excel file
       return new NextResponse(buffer, {
         headers: {
           'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition': `attachment; filename="accreditation-report-${new Date().toISOString().split('T')[0]}.xlsx"`
+          'Content-Disposition': `attachment; filename="${fileName}"`
         }
       });
     }
