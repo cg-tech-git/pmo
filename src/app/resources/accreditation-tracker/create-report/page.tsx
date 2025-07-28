@@ -324,6 +324,11 @@ export default function CreateAccreditationReport() {
         
         toast.dismiss(loadingToast);
         toast.success('Excel report downloaded successfully! You can open it in Google Sheets.');
+        
+        // Navigate to reports page after successful generation
+        setTimeout(() => {
+          router.push('/resources/accreditation-tracker/reports');
+        }, 1500);
       } else {
         // TODO: Handle PDF format
         toast.dismiss(loadingToast);
