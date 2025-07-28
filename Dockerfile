@@ -14,6 +14,10 @@ FROM node:18-alpine AS builder
 # Install Python and gsutil dependencies
 RUN apk add --no-cache python3 py3-pip curl bash
 
+# Install gcloud SDK for better GCS authentication
+RUN curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=/opt
+ENV PATH="/opt/google-cloud-sdk/bin:$PATH"
+
 # Install Chromium and dependencies for Puppeteer
 RUN apk add --no-cache \
     chromium \
@@ -48,6 +52,10 @@ FROM node:18-alpine AS runner
 # Install Python and gsutil for runtime
 RUN apk add --no-cache python3 py3-pip curl bash
 
+# Install gcloud SDK for runtime
+RUN curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=/opt
+ENV PATH="/opt/google-cloud-sdk/bin:$PATH"
+
 # Install Chromium and dependencies for Puppeteer runtime
 RUN apk add --no-cache \
     chromium \
@@ -62,17 +70,14 @@ RUN python3 -m venv /venv && \
     /venv/bin/pip install gsutil
 ENV PATH="/venv/bin:$PATH"
 
-# Configure gsutil to use service account from metadata
-RUN echo "[Credentials]" > /etc/boto.cfg && \
-    echo "gs_service_key_file = /dev/null" >> /etc/boto.cfg && \
-    echo "gs_service_client_id = ''" >> /etc/boto.cfg && \
-    echo "[Boto]" >> /etc/boto.cfg && \
-    echo "https_validate_certificates = True" >> /etc/boto.cfg && \
-    echo "[GSUtil]" >> /etc/boto.cfg && \
-    echo "default_project_id = hybrid-shine-466111-s0" >> /etc/boto.cfg
+# Remove any existing boto config
+RUN rm -f /etc/boto.cfg ~/.boto
 
-# Set environment variable to use metadata service
-ENV GCE_METADATA_HOST=metadata.google.internal
+# Set environment variables for GCE metadata service authentication
+ENV GOOGLE_APPLICATION_CREDENTIALS=""
+ENV BOTO_CONFIG=/dev/null
+ENV CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=""
+ENV GOOGLE_CLOUD_PROJECT=hybrid-shine-466111-s0
 
 WORKDIR /app
 

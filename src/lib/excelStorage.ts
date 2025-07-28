@@ -78,8 +78,9 @@ async function downloadExcelFile(): Promise<XLSX.WorkBook> {
     const execAsync = promisify(exec);
     
     try {
-      const { stdout, stderr } = await execAsync(`gsutil cat "${GCS_URL}" | base64`);
-      if (stderr) console.log('gsutil download stderr:', stderr);
+      // Try gcloud storage first
+      const { stdout, stderr } = await execAsync(`gcloud storage cat "${GCS_URL}" | base64`);
+      if (stderr) console.log('gcloud download stderr:', stderr);
       
       // Convert base64 to buffer and read as workbook
       const buffer = Buffer.from(stdout.trim(), 'base64');
@@ -87,10 +88,21 @@ async function downloadExcelFile(): Promise<XLSX.WorkBook> {
       
       console.log('Successfully downloaded and parsed Excel file');
       return workbook;
-    } catch (downloadError: any) {
-      console.warn('Could not download existing file, creating new one:', downloadError.message);
-      console.error('Download error details:', downloadError.stderr || downloadError.message);
-      return createNewWorkbook();
+    } catch (gcloudError: any) {
+      console.warn('gcloud download failed, trying gsutil:', gcloudError.message);
+      
+      // Fallback to gsutil
+      try {
+        const { stdout, stderr } = await execAsync(`gsutil -q cat "${GCS_URL}" | base64`);
+        const buffer = Buffer.from(stdout.trim(), 'base64');
+        const workbook = XLSX.read(buffer, { type: 'buffer' });
+        console.log('Successfully downloaded with gsutil fallback');
+        return workbook;
+      } catch (downloadError: any) {
+        console.warn('Could not download existing file, creating new one:', downloadError.message);
+        console.error('Download error details:', downloadError.stderr || downloadError.message);
+        return createNewWorkbook();
+      }
     }
   } catch (error) {
     console.error('Error in downloadExcelFile:', error);
@@ -114,26 +126,33 @@ async function uploadExcelFile(workbook: XLSX.WorkBook): Promise<void> {
     const { promisify } = require('util');
     const execAsync = promisify(exec);
     
-    // Use echo to pipe base64 data to gsutil
+    // Use gcloud storage instead of gsutil for better authentication
     try {
-      // First check if we can access the bucket
-      console.log('Checking gsutil access to bucket...');
-      const { stdout: lsOut, stderr: lsErr } = await execAsync(`gsutil ls gs://${BUCKET_NAME}/`);
-      console.log('gsutil ls result:', lsOut || 'success');
-      if (lsErr) console.log('gsutil ls stderr:', lsErr);
+      // First authenticate with metadata service
+      console.log('Authenticating with metadata service...');
+      await execAsync('gcloud auth application-default print-access-token > /dev/null 2>&1 || true');
       
-      // Now upload the file
+      // Use gcloud storage cp instead of gsutil
       console.log(`Uploading to ${GCS_URL}...`);
-      const { stdout, stderr } = await execAsync(`echo "${base64Data}" | base64 -d | gsutil cp - "${GCS_URL}"`);
-      if (stdout) console.log('gsutil upload stdout:', stdout);
-      if (stderr) console.log('gsutil upload stderr:', stderr);
+      const { stdout, stderr } = await execAsync(`echo "${base64Data}" | base64 -d | gcloud storage cp - "${GCS_URL}"`);
+      if (stdout) console.log('gcloud upload stdout:', stdout);
+      if (stderr) console.log('gcloud upload stderr:', stderr);
       console.log('Successfully uploaded Excel file to GCS');
-    } catch (gsutilError: any) {
-      console.error('gsutil command failed:', gsutilError.message);
-      console.error('gsutil stderr:', gsutilError.stderr);
-      console.error('gsutil stdout:', gsutilError.stdout);
-      console.error('gsutil exit code:', gsutilError.code);
-      throw gsutilError;
+    } catch (uploadError: any) {
+      console.error('gcloud command failed:', uploadError.message);
+      console.error('gcloud stderr:', uploadError.stderr);
+      console.error('gcloud stdout:', uploadError.stdout);
+      console.error('gcloud exit code:', uploadError.code);
+      
+      // Fallback to gsutil without authentication check
+      console.log('Falling back to gsutil...');
+      try {
+        const { stdout, stderr } = await execAsync(`echo "${base64Data}" | base64 -d | gsutil -q cp - "${GCS_URL}"`);
+        console.log('Successfully uploaded with gsutil fallback');
+      } catch (gsutilError: any) {
+        console.error('gsutil fallback also failed:', gsutilError.message);
+        throw uploadError; // Throw original error
+      }
     }
   } catch (error: any) {
     console.error('Error uploading Excel file:', error);
