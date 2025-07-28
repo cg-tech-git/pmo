@@ -38,8 +38,16 @@ export async function POST(request: NextRequest) {
     try {
       // Download file from GCS
       console.log('Downloading report from GCS:', gcsPath);
-      const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
-      if (stderr) console.log('gsutil download stderr:', stderr);
+      
+      // Try gcloud storage first, fallback to gsutil
+      try {
+        const { stdout, stderr } = await execAsync(`gcloud storage cp "${gcsPath}" "${tempFile}"`);
+        if (stderr) console.log('gcloud storage download stderr:', stderr);
+      } catch (gcloudError: any) {
+        console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
+        const { stdout, stderr } = await execAsync(`gsutil -q cp "${gcsPath}" "${tempFile}"`);
+        if (stderr) console.log('gsutil download stderr:', stderr);
+      }
       
       // Read the file
       buffer = await fs.readFile(tempFile);

@@ -35,10 +35,16 @@ async function downloadReportHistory(): Promise<ReportHistoryEntry[]> {
   const gcsPath = `gs://${bucketName}/${folderName}/${historyFileName}`;
   
   try {
-    // Try gsutil first
+    // Try gcloud storage first, fallback to gsutil
     console.log('Downloading report history from GCS:', gcsPath);
-    const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
-    if (stderr) console.log('gsutil download stderr:', stderr);
+    try {
+      const { stdout, stderr } = await execAsync(`gcloud storage cp "${gcsPath}" "${tempFile}"`);
+      if (stderr) console.log('gcloud storage download stderr:', stderr);
+    } catch (gcloudError: any) {
+      console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
+      const { stdout, stderr } = await execAsync(`gsutil -q cp "${gcsPath}" "${tempFile}"`);
+      if (stderr) console.log('gsutil download stderr:', stderr);
+    }
     
     const content = await fs.readFile(tempFile, 'utf-8');
     await fs.unlink(tempFile); // Clean up temp file
@@ -64,9 +70,18 @@ async function uploadReportHistory(history: ReportHistoryEntry[]): Promise<void>
     
     // Upload to GCS
     const gcsPath = `gs://${bucketName}/${folderName}/${historyFileName}`;
-    const { stdout, stderr } = await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
-    if (stdout) console.log('gsutil upload stdout:', stdout);
-    if (stderr) console.log('gsutil upload stderr:', stderr);
+    
+    // Try gcloud storage first, fallback to gsutil
+    try {
+      const { stdout, stderr } = await execAsync(`gcloud storage cp "${tempFile}" "${gcsPath}"`);
+      if (stdout) console.log('gcloud storage upload stdout:', stdout);
+      if (stderr) console.log('gcloud storage upload stderr:', stderr);
+    } catch (gcloudError: any) {
+      console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
+      const { stdout, stderr } = await execAsync(`gsutil -q cp "${tempFile}" "${gcsPath}"`);
+      if (stdout) console.log('gsutil upload stdout:', stdout);
+      if (stderr) console.log('gsutil upload stderr:', stderr);
+    }
     
     console.log('Report history uploaded successfully, entries:', history.length);
     

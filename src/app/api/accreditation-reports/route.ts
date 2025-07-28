@@ -428,8 +428,17 @@ export async function POST(request: NextRequest) {
         
         // Write buffer to temp file and upload
         await fs.writeFile(tempFile, buffer);
-        const { stdout, stderr } = await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
-        if (stderr) console.log('gsutil upload stderr:', stderr);
+        
+        // Try gcloud storage first, fallback to gsutil
+        try {
+          const { stdout, stderr } = await execAsync(`gcloud storage cp "${tempFile}" "${gcsPath}"`);
+          if (stderr) console.log('gcloud storage upload stderr:', stderr);
+        } catch (gcloudError: any) {
+          console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
+          const { stdout, stderr } = await execAsync(`gsutil -q cp "${tempFile}" "${gcsPath}"`);
+          if (stderr) console.log('gsutil upload stderr:', stderr);
+        }
+        
         await fs.unlink(tempFile); // Clean up
         
         console.log('Report file uploaded to GCS:', gcsPath);
