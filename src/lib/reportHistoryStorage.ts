@@ -31,30 +31,33 @@ export interface ReportHistoryEntry {
 
 // Download report history from GCS
 async function downloadReportHistory(): Promise<ReportHistoryEntry[]> {
-  const tempFile = path.join(os.tmpdir(), `report-history-${Date.now()}.json`);
   const gcsPath = `gs://${bucketName}/${folderName}/${historyFileName}`;
   
   try {
-    // Try gcloud storage first, fallback to gsutil
+    // Try gcloud storage cat directly to avoid file system caching
     console.log('Downloading report history from GCS:', gcsPath);
+    let content: string;
+    
     try {
-      const { stdout, stderr } = await execAsync(`gcloud storage cp "${gcsPath}" "${tempFile}"`);
-      if (stderr) console.log('gcloud storage download stderr:', stderr);
+      // Use gcloud storage cat to read directly without temp file
+      const { stdout } = await execAsync(`gcloud storage cat "${gcsPath}"`);
+      content = stdout;
+      console.log('Downloaded report history using gcloud storage cat');
     } catch (gcloudError: any) {
       console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
-      const { stdout, stderr } = await execAsync(`gsutil -q cp "${gcsPath}" "${tempFile}"`);
-      if (stderr) console.log('gsutil download stderr:', stderr);
+      // Fallback to gsutil cat
+      const { stdout } = await execAsync(`gsutil -q cat "${gcsPath}"`);
+      content = stdout;
+      console.log('Downloaded report history using gsutil cat');
     }
-    
-    const content = await fs.readFile(tempFile, 'utf-8');
-    await fs.unlink(tempFile); // Clean up temp file
     
     const history = JSON.parse(content);
     console.log('Downloaded report history, entries:', history.length);
+    console.log('Report entries:', JSON.stringify(history.map((h: ReportHistoryEntry) => ({ id: h.id, createdAt: h.createdAt })), null, 2));
     return history;
   } catch (error: any) {
     console.log('Report history download error:', error.message);
-    if (error.stderr) console.log('gsutil stderr:', error.stderr);
+    if (error.stderr) console.log('stderr:', error.stderr);
     console.log('Report history not found, returning empty array');
     return [];
   }

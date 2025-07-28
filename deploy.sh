@@ -36,7 +36,7 @@ fi
 
 # Build the Docker image
 echo -e "\n${YELLOW}Building Docker image...${NC}"
-docker build -t ${IMAGE_NAME}:latest .
+docker build --platform linux/amd64 -t ${IMAGE_NAME}:latest .
 if [ $? -ne 0 ]; then
     echo -e "${RED}Error: Docker build failed${NC}"
     exit 1

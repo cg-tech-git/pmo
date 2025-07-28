@@ -176,8 +176,13 @@ export default function AccreditationReports() {
     try {
       setLoading(true)
       
-      // Fetch report history from API
-      const response = await fetch('/api/accreditation-reports/history')
+      // Fetch report history from API with cache-busting
+      const response = await fetch(`/api/accreditation-reports/history?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      })
       
       if (!response.ok) {
         throw new Error('Failed to fetch reports')
@@ -307,12 +312,26 @@ export default function AccreditationReports() {
               <ArrowLeftIcon className="w-4 h-4" />
               Back to Manpower Accreditation
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Accreditation Reports
-            </h1>
-            <p className="text-gray-600">
-              View and download all generated accreditation reports.
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  Accreditation Reports
+                </h1>
+                <p className="text-gray-600">
+                  View and download all generated accreditation reports.
+                </p>
+              </div>
+              <button
+                onClick={() => fetchReports()}
+                disabled={loading}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
+            </div>
           </div>
 
         <div className="max-w-6xl mx-auto">
