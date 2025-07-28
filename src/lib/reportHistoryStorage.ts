@@ -51,9 +51,14 @@ async function downloadReportHistory(): Promise<ReportHistoryEntry[]> {
       console.log('Downloaded report history using gsutil cat');
     }
     
+    console.log('Raw content length:', content.length);
+    console.log('First 200 chars of content:', content.substring(0, 200));
+    
     const history = JSON.parse(content);
-    console.log('Downloaded report history, entries:', history.length);
-    console.log('Report entries:', JSON.stringify(history.map((h: ReportHistoryEntry) => ({ id: h.id, createdAt: h.createdAt })), null, 2));
+    console.log('Parsed history, entries:', history.length);
+    console.log('All report IDs:', history.map((h: ReportHistoryEntry) => h.id));
+    console.log('Full history:', JSON.stringify(history, null, 2));
+    
     return history;
   } catch (error: any) {
     console.log('Report history download error:', error.message);
