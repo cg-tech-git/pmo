@@ -12,20 +12,20 @@ console.log('App ID:', process.env.NEXT_PUBLIC_FIREBASE_APP_ID)
 console.log('================================')
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'demo-key',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'demo.firebaseapp.com',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'demo-project',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'demo.appspot.com',
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '123456789',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:123456789:web:demo',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyCxM-9g3nvqEKz-9DSS4dFi0aJ0iyFLS00',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'pmo-authentication.firebaseapp.com',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'pmo-authentication',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'pmo-authentication.firebasestorage.app',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '1094577705424',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:1094577705424:web:126af87da71c9986f8a9d5',
 }
 
 console.log('Final Firebase Config:', firebaseConfig)
 
 // Check if we have real Firebase configuration
-const isConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && 
-                    process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'demo-key' &&
-                    process.env.NEXT_PUBLIC_FIREBASE_API_KEY.startsWith('AIza')
+const isConfigured = firebaseConfig.apiKey && 
+                    firebaseConfig.apiKey !== 'demo-key' &&
+                    firebaseConfig.apiKey.startsWith('AIza')
 
 console.log('Is Firebase configured?', isConfigured)
 

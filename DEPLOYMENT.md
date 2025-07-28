@@ -1,5 +1,11 @@
 # PMO Application - Cloud Run Deployment Guide
 
+## 🚀 Production Deployment
+
+**Live URL:** https://pmo-app-717372460925.us-central1.run.app  
+**Region:** us-central1  
+**Status:** ✅ Deployed Successfully
+
 ## Prerequisites
 
 1. **Google Cloud Project**

@@ -37,7 +37,7 @@ const heroSlides: HeroSlide[] = [
     alt: 'Dashboard Analytics',
     imageStyles: 'object-cover scale-75 translate-y-[3%] translate-x-[7%]',
     containerStyles: 'p-4',
-    buttonText: 'View dashboard'
+    buttonText: 'Coming soon'
   },
   {
     id: 'templates',

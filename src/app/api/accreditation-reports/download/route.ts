@@ -23,32 +23,41 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // For now, generate a sample Excel file with the report metadata
-    // In a production system, you would store and retrieve the actual generated file
-    const XLSX = require('xlsx');
+    // Download the actual file from GCS
+    const { exec } = require('child_process');
+    const { promisify } = require('util');
+    const fs = require('fs').promises;
+    const path = require('path');
+    const os = require('os');
     
-    // Create sample data based on report metadata
-    const data = [
-      ['Accreditation Report'],
-      [],
-      [`Generated: ${new Date(report.createdAt).toLocaleString()}`],
-      [`User: ${report.userId}`],
-      [`Employees: ${report.employeeCount}`],
-      [`Fields: ${report.fieldCount}`],
-      [],
-      ['Employee ID', 'Sample Field 1', 'Sample Field 2', 'Sample Field 3'],
-      ['0001', 'Data 1', 'Data 2', 'Data 3'],
-      ['0002', 'Data 4', 'Data 5', 'Data 6'],
-      ['0003', 'Data 7', 'Data 8', 'Data 9']
-    ];
+    const execAsync = promisify(exec);
+    const tempFile = path.join(os.tmpdir(), report.fileName);
+    const gcsPath = `gs://pmo-documents-hybrid-shine-466111-s0/reports/${report.id}/${report.fileName}`;
     
-    // Create workbook and worksheet
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Accreditation Report');
-    
-    // Generate buffer
-    const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    let buffer: Buffer;
+    try {
+      // Download file from GCS
+      console.log('Downloading report from GCS:', gcsPath);
+      const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
+      if (stderr) console.log('gsutil download stderr:', stderr);
+      
+      // Read the file
+      buffer = await fs.readFile(tempFile);
+      
+      // Clean up temp file
+      await fs.unlink(tempFile);
+      
+      console.log('Report downloaded successfully, size:', buffer.length);
+    } catch (downloadError: any) {
+      console.error('Failed to download report from GCS:', downloadError);
+      console.error('gsutil error:', downloadError.stderr);
+      
+      // If download fails, generate a placeholder
+      return NextResponse.json(
+        { error: 'Report file not found in storage' },
+        { status: 404 }
+      );
+    }
     
     // Return the Excel file
     return new NextResponse(buffer, {

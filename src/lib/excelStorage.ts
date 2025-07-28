@@ -78,7 +78,8 @@ async function downloadExcelFile(): Promise<XLSX.WorkBook> {
     const execAsync = promisify(exec);
     
     try {
-      const { stdout } = await execAsync(`gsutil cat "${GCS_URL}" | base64`);
+      const { stdout, stderr } = await execAsync(`gsutil cat "${GCS_URL}" | base64`);
+      if (stderr) console.log('gsutil download stderr:', stderr);
       
       // Convert base64 to buffer and read as workbook
       const buffer = Buffer.from(stdout.trim(), 'base64');
@@ -88,6 +89,7 @@ async function downloadExcelFile(): Promise<XLSX.WorkBook> {
       return workbook;
     } catch (downloadError: any) {
       console.warn('Could not download existing file, creating new one:', downloadError.message);
+      console.error('Download error details:', downloadError.stderr || downloadError.message);
       return createNewWorkbook();
     }
   } catch (error) {
@@ -113,9 +115,17 @@ async function uploadExcelFile(workbook: XLSX.WorkBook): Promise<void> {
     const execAsync = promisify(exec);
     
     // Use echo to pipe base64 data to gsutil
-    await execAsync(`echo "${base64Data}" | base64 -d | gsutil cp - "${GCS_URL}"`);
-    
-    console.log('Successfully uploaded Excel file to GCS');
+    try {
+      const { stdout, stderr } = await execAsync(`echo "${base64Data}" | base64 -d | gsutil cp - "${GCS_URL}"`);
+      if (stdout) console.log('gsutil upload stdout:', stdout);
+      if (stderr) console.log('gsutil upload stderr:', stderr);
+      console.log('Successfully uploaded Excel file to GCS');
+    } catch (gsutilError: any) {
+      console.error('gsutil command failed:', gsutilError.message);
+      console.error('gsutil stderr:', gsutilError.stderr);
+      console.error('gsutil stdout:', gsutilError.stdout);
+      throw gsutilError;
+    }
   } catch (error: any) {
     console.error('Error uploading Excel file:', error);
     throw new Error(`Failed to upload Excel file: ${error.message}`);

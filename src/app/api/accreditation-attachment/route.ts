@@ -55,11 +55,14 @@ export async function GET(request: NextRequest) {
     for (const gcsPath of possiblePaths) {
       try {
         console.log('Trying path:', gcsPath);
-        await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
+        const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
+        if (stderr) console.log('gsutil stderr:', stderr);
         fileFound = true;
         break; // File found, exit loop
-      } catch (error) {
+      } catch (error: any) {
         lastError = error;
+        console.log(`Failed to find file at ${gcsPath}:`, error.message);
+        if (error.stderr) console.log('gsutil error:', error.stderr);
         // Continue to next path
       }
     }

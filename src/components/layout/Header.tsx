@@ -207,7 +207,7 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
             <button
               type="button"
               onClick={() => router.push('/resources/accreditation-tracker/expiry-alerts')}
-              className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
+              className="relative -m-2.5 p-2.5 text-gray-300 hover:text-gray-400 hover:bg-gray-50 rounded-lg transition-colors group"
             >
               <span className="sr-only">View notifications</span>
               <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
@@ -215,7 +215,13 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
               </svg>
               {/* Notification Indicator - Red Dot */}
               {!loadingExpiredCount && expiredCount > 0 && (
-                <div className="absolute top-[9px] right-[11px] h-[8px] w-[8px] bg-red-500 rounded-full ring-1 ring-white z-10" />
+                <>
+                  <div className="absolute top-[9px] right-[11px] h-[8px] w-[8px] bg-red-500 rounded-full ring-1 ring-white z-10" />
+                  {/* Hover Tooltip */}
+                  <div className="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
+                    See Expiry Alerts
+                  </div>
+                </>
               )}
             </button>
 

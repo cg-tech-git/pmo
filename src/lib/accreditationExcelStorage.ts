@@ -161,14 +161,43 @@ export async function downloadExcelFromGCS(): Promise<Buffer> {
 }
 
 export async function uploadExcelToGCS(buffer: Buffer): Promise<void> {
-  const bucket = storage.bucket(bucketName);
-  const file = bucket.file(`${folderName}/${fileName}`);
+  const { exec } = require('child_process');
+  const { promisify } = require('util');
+  const fs = require('fs').promises;
+  const path = require('path');
+  const os = require('os');
   
-  await file.save(buffer, {
-    metadata: {
-      contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    },
-  });
+  const execAsync = promisify(exec);
+  const tempFile = path.join(os.tmpdir(), `accreditation-upload-${Date.now()}.xlsx`);
+  const gcsPath = `gs://${bucketName}/${folderName}/${fileName}`;
+  
+  try {
+    // Use gsutil command for upload
+    console.log('Uploading to GCS using gsutil:', gcsPath);
+    await fs.writeFile(tempFile, buffer);
+    const { stdout, stderr } = await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
+    if (stdout) console.log('gsutil upload stdout:', stdout);
+    if (stderr) console.log('gsutil upload stderr:', stderr);
+    
+    // Clean up temp file
+    await fs.unlink(tempFile);
+    console.log('Successfully uploaded to GCS');
+  } catch (error) {
+    console.error('Error uploading with gsutil:', error);
+    // Clean up temp file on error
+    try { await fs.unlink(tempFile); } catch (e) {}
+    
+    // Fallback to SDK method
+    console.log('Falling back to SDK upload');
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file(`${folderName}/${fileName}`);
+    
+    await file.save(buffer, {
+      metadata: {
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      },
+    });
+  }
   
   // Invalidate cache after upload
   submissionsCache = null;

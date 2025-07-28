@@ -7,7 +7,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_ID=$(gcloud config get-value project)
+PROJECT_ID="hybrid-shine-466111-s0"
 REGION="us-central1"
 SERVICE_NAME="pmo-app"
 IMAGE_NAME="gcr.io/${PROJECT_ID}/${SERVICE_NAME}"

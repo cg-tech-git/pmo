@@ -410,9 +410,31 @@ export async function POST(request: NextRequest) {
       // Get user ID from request headers (you might get this differently based on your auth setup)
       const userId = request.headers.get('x-user-id') || 'anonymous';
       
-      // Save report metadata to history
-      const fileName = `accreditation-report-${new Date().toISOString().split('T')[0]}.xlsx`;
+      // Save report to GCS
+      const fileName = `accreditation-report-${new Date().toISOString().split('T')[0]}-${Date.now()}.xlsx`;
+      const reportId = `report-${Date.now()}`;
+      
       try {
+        // Save the actual Excel file to GCS
+        const { exec } = require('child_process');
+        const { promisify } = require('util');
+        const fs = require('fs').promises;
+        const path = require('path');
+        const os = require('os');
+        
+        const execAsync = promisify(exec);
+        const tempFile = path.join(os.tmpdir(), fileName);
+        const gcsPath = `gs://${bucketName}/reports/${reportId}/${fileName}`;
+        
+        // Write buffer to temp file and upload
+        await fs.writeFile(tempFile, buffer);
+        const { stdout, stderr } = await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
+        if (stderr) console.log('gsutil upload stderr:', stderr);
+        await fs.unlink(tempFile); // Clean up
+        
+        console.log('Report file uploaded to GCS:', gcsPath);
+        
+        // Save report metadata to history with reportId as the id
         await addReportToHistory({
           userId,
           fileName,
@@ -422,8 +444,8 @@ export async function POST(request: NextRequest) {
         });
         console.log('Report saved to history');
       } catch (error) {
-        console.error('Failed to save report to history:', error);
-        // Don't fail the request if history saving fails
+        console.error('Failed to save report:', error);
+        // Don't fail the request if saving fails
       }
       
       // Return Excel file

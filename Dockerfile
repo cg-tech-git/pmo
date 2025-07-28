@@ -13,14 +13,32 @@ RUN npm ci --only=production
 FROM node:18-alpine AS builder
 # Install Python and gsutil dependencies
 RUN apk add --no-cache python3 py3-pip curl bash
-# Install gsutil
-RUN pip3 install gsutil
+
+# Install Chromium and dependencies for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    yarn
+
+# Tell Puppeteer to skip installing Chrome. We'll use the installed chromium.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# Create virtual environment and install gsutil
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install gsutil
+ENV PATH="/venv/bin:$PATH"
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Set environment variables for build
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application
 RUN npm run build
@@ -29,11 +47,31 @@ RUN npm run build
 FROM node:18-alpine AS runner
 # Install Python and gsutil for runtime
 RUN apk add --no-cache python3 py3-pip curl bash
-RUN pip3 install gsutil
+
+# Install Chromium and dependencies for Puppeteer runtime
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+# Create virtual environment and install gsutil
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install gsutil
+ENV PATH="/venv/bin:$PATH"
+
+# Configure gsutil to use service account from metadata
+RUN echo "[Credentials]" > /etc/boto.cfg && \
+    echo "service_account = default" >> /etc/boto.cfg && \
+    echo "[Boto]" >> /etc/boto.cfg && \
+    echo "https_validate_certificates = True" >> /etc/boto.cfg
+
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -53,7 +91,7 @@ USER nextjs
 EXPOSE 8080
 
 # Set the PORT environment variable for Cloud Run
-ENV PORT 8080
+ENV PORT=8080
 
 # Start the application
 CMD ["node", "server.js"] 

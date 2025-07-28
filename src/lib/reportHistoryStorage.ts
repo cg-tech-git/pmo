@@ -37,13 +37,18 @@ async function downloadReportHistory(): Promise<ReportHistoryEntry[]> {
   try {
     // Try gsutil first
     console.log('Downloading report history from GCS:', gcsPath);
-    await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
+    const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
+    if (stderr) console.log('gsutil download stderr:', stderr);
     
     const content = await fs.readFile(tempFile, 'utf-8');
     await fs.unlink(tempFile); // Clean up temp file
     
-    return JSON.parse(content);
-  } catch (error) {
+    const history = JSON.parse(content);
+    console.log('Downloaded report history, entries:', history.length);
+    return history;
+  } catch (error: any) {
+    console.log('Report history download error:', error.message);
+    if (error.stderr) console.log('gsutil stderr:', error.stderr);
     console.log('Report history not found, returning empty array');
     return [];
   }
@@ -59,14 +64,19 @@ async function uploadReportHistory(history: ReportHistoryEntry[]): Promise<void>
     
     // Upload to GCS
     const gcsPath = `gs://${bucketName}/${folderName}/${historyFileName}`;
-    await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
+    const { stdout, stderr } = await execAsync(`gsutil cp "${tempFile}" "${gcsPath}"`);
+    if (stdout) console.log('gsutil upload stdout:', stdout);
+    if (stderr) console.log('gsutil upload stderr:', stderr);
     
-    console.log('Report history uploaded successfully');
+    console.log('Report history uploaded successfully, entries:', history.length);
     
     // Clean up temp file
     await fs.unlink(tempFile);
-  } catch (error) {
-    console.error('Error uploading report history:', error);
+  } catch (error: any) {
+    console.error('Error uploading report history:', error.message);
+    if (error.stderr) console.error('gsutil stderr:', error.stderr);
+    // Clean up temp file on error
+    try { await fs.unlink(tempFile); } catch (e) {}
     throw error;
   }
 }
