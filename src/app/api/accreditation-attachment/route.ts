@@ -55,14 +55,24 @@ export async function GET(request: NextRequest) {
     for (const gcsPath of possiblePaths) {
       try {
         console.log('Trying path:', gcsPath);
-        const { stdout, stderr } = await execAsync(`gsutil cp "${gcsPath}" "${tempFile}"`);
-        if (stderr) console.log('gsutil stderr:', stderr);
-        fileFound = true;
-        break; // File found, exit loop
+        // Try gcloud storage first
+        try {
+          const { stdout, stderr } = await execAsync(`gcloud storage cp "${gcsPath}" "${tempFile}"`);
+          if (stderr) console.log('gcloud storage stderr:', stderr);
+          fileFound = true;
+          break; // File found, exit loop
+        } catch (gcloudError: any) {
+          console.log('gcloud storage failed, trying gsutil:', gcloudError.message);
+          // Fallback to gsutil
+          const { stdout, stderr } = await execAsync(`gsutil -q cp "${gcsPath}" "${tempFile}"`);
+          if (stderr) console.log('gsutil stderr:', stderr);
+          fileFound = true;
+          break; // File found, exit loop
+        }
       } catch (error: any) {
         lastError = error;
         console.log(`Failed to find file at ${gcsPath}:`, error.message);
-        if (error.stderr) console.log('gsutil error:', error.stderr);
+        if (error.stderr) console.log('error stderr:', error.stderr);
         // Continue to next path
       }
     }

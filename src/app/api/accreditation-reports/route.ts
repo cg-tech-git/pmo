@@ -436,6 +436,7 @@ export async function POST(request: NextRequest) {
         
         // Save report metadata to history with reportId as the id
         await addReportToHistory({
+          id: reportId, // Pass the generated reportId
           userId,
           fileName,
           employeeCount: filteredSubmissions.length,

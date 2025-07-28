@@ -82,7 +82,7 @@ async function uploadReportHistory(history: ReportHistoryEntry[]): Promise<void>
 }
 
 // Add a new report entry
-export async function addReportToHistory(entry: Omit<ReportHistoryEntry, 'id' | 'createdAt'>): Promise<ReportHistoryEntry> {
+export async function addReportToHistory(entry: Omit<ReportHistoryEntry, 'id' | 'createdAt'> & { id?: string }): Promise<ReportHistoryEntry> {
   try {
     // Download current history
     const history = await downloadReportHistory();
@@ -90,7 +90,7 @@ export async function addReportToHistory(entry: Omit<ReportHistoryEntry, 'id' | 
     // Create new entry
     const newEntry: ReportHistoryEntry = {
       ...entry,
-      id: `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: entry.id || `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       createdAt: new Date().toISOString()
     };
     

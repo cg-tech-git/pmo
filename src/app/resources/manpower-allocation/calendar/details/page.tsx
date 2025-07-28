@@ -88,8 +88,8 @@ export default function ManpowerAllocationDetails() {
         
         // Sort by submission date in descending order (most recent first)
         const sortedSubmissions = allSubmissions.sort((a, b) => {
-          const dateA = new Date(a.submissionDate);
-          const dateB = new Date(b.submissionDate);
+          const dateA = new Date(a.submissionDate || a.date);
+          const dateB = new Date(b.submissionDate || b.date);
           return dateB.getTime() - dateA.getTime();
         });
         
