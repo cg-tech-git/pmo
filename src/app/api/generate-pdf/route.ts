@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         '--disable-features=IsolateOrigins',
         '--disable-site-isolation-trials'
       ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser'
     });
     
     try {

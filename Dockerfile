@@ -64,9 +64,15 @@ ENV PATH="/venv/bin:$PATH"
 
 # Configure gsutil to use service account from metadata
 RUN echo "[Credentials]" > /etc/boto.cfg && \
-    echo "service_account = default" >> /etc/boto.cfg && \
+    echo "gs_service_key_file = /dev/null" >> /etc/boto.cfg && \
+    echo "gs_service_client_id = ''" >> /etc/boto.cfg && \
     echo "[Boto]" >> /etc/boto.cfg && \
-    echo "https_validate_certificates = True" >> /etc/boto.cfg
+    echo "https_validate_certificates = True" >> /etc/boto.cfg && \
+    echo "[GSUtil]" >> /etc/boto.cfg && \
+    echo "default_project_id = hybrid-shine-466111-s0" >> /etc/boto.cfg
+
+# Set environment variable to use metadata service
+ENV GCE_METADATA_HOST=metadata.google.internal
 
 WORKDIR /app
 

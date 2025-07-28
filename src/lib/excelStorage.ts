@@ -116,6 +116,14 @@ async function uploadExcelFile(workbook: XLSX.WorkBook): Promise<void> {
     
     // Use echo to pipe base64 data to gsutil
     try {
+      // First check if we can access the bucket
+      console.log('Checking gsutil access to bucket...');
+      const { stdout: lsOut, stderr: lsErr } = await execAsync(`gsutil ls gs://${BUCKET_NAME}/`);
+      console.log('gsutil ls result:', lsOut || 'success');
+      if (lsErr) console.log('gsutil ls stderr:', lsErr);
+      
+      // Now upload the file
+      console.log(`Uploading to ${GCS_URL}...`);
       const { stdout, stderr } = await execAsync(`echo "${base64Data}" | base64 -d | gsutil cp - "${GCS_URL}"`);
       if (stdout) console.log('gsutil upload stdout:', stdout);
       if (stderr) console.log('gsutil upload stderr:', stderr);
@@ -124,6 +132,7 @@ async function uploadExcelFile(workbook: XLSX.WorkBook): Promise<void> {
       console.error('gsutil command failed:', gsutilError.message);
       console.error('gsutil stderr:', gsutilError.stderr);
       console.error('gsutil stdout:', gsutilError.stdout);
+      console.error('gsutil exit code:', gsutilError.code);
       throw gsutilError;
     }
   } catch (error: any) {

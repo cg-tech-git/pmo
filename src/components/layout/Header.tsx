@@ -217,10 +217,10 @@ export default function Header({ mobileMenuOpen = false, onMenuClick, onCloseMob
               {!loadingExpiredCount && expiredCount > 0 && (
                 <>
                   <div className="absolute top-[9px] right-[11px] h-[8px] w-[8px] bg-red-500 rounded-full ring-1 ring-white z-10" />
-                  {/* Hover Tooltip */}
-                  <div className="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
-                    See Expiry Alerts
-                  </div>
+                                {/* Hover Tooltip */}
+              <div className="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap">
+                See Expiry Alerts
+              </div>
                 </>
               )}
             </button>
