@@ -86,11 +86,21 @@ export default function ManpowerAllocationDetails() {
         // Combine real and mock data  
         const allSubmissions = [...fetchedSubmissions, ...mockSubmissions]
         
-        // Sort by submission date in descending order (most recent first)
+        // Sort by allocation date in descending order (most recent first)
+        // If allocation dates are the same, sort by submission date
         const sortedSubmissions = allSubmissions.sort((a, b) => {
-          const dateA = new Date(a.submissionDate || a.date);
-          const dateB = new Date(b.submissionDate || b.date);
-          return dateB.getTime() - dateA.getTime();
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          const dateDiff = dateB.getTime() - dateA.getTime();
+          
+          // If allocation dates are the same, sort by submission date
+          if (dateDiff === 0) {
+            const submissionDateA = new Date(a.submissionDate);
+            const submissionDateB = new Date(b.submissionDate);
+            return submissionDateB.getTime() - submissionDateA.getTime();
+          }
+          
+          return dateDiff;
         });
         
         setSubmissions(sortedSubmissions)
@@ -574,7 +584,7 @@ export default function ManpowerAllocationDetails() {
                 </colgroup>
                 <thead className="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Allocation Date</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Customer Name</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Project Name</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-900">Project</th>
@@ -603,7 +613,7 @@ export default function ManpowerAllocationDetails() {
                     <tr key={submission.id} className={`hover:bg-gray-100 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                       <td className="py-4 px-6">
                         <span className="text-sm text-gray-900">
-                          {new Date(submission.submissionDate).toLocaleDateString('en-GB', {
+                          {new Date(submission.date).toLocaleDateString('en-GB', {
                             day: '2-digit',
                             month: '2-digit',
                             year: 'numeric'
