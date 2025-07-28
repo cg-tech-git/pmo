@@ -424,7 +424,7 @@ export async function POST(request: NextRequest) {
         
         const execAsync = promisify(exec);
         const tempFile = path.join(os.tmpdir(), fileName);
-        const gcsPath = `gs://${bucketName}/reports/${reportId}/${fileName}`;
+        const gcsPath = `gs://${bucketName}/manpower - accreditation/reports/${reportId}/${fileName}`;
         
         // Write buffer to temp file and upload
         await fs.writeFile(tempFile, buffer);

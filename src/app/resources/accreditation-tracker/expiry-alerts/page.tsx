@@ -146,103 +146,33 @@ export default function ExpiryAlerts() {
     try {
       setLoading(true)
       
-      // TODO: Replace with actual API call that fetches data from accreditation Excel
-      // Mock data showing various expiry scenarios
-      const today = new Date()
-      const mockAlerts: ExpiryAlert[] = []
+      // Fetch actual expiry data from API
+      const response = await fetch('/api/accreditation-expiry')
       
-      // Helper to calculate days until expiry and status
-      const calculateDaysAndStatus = (expiryDate: Date) => {
-        const days = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-        let status: ExpiryAlert['status']
-        if (days < 0) status = 'expired'
-        else if (days <= 30) status = 'critical'
-        else if (days <= 60) status = 'warning'
-        else status = 'safe'
-        return { days, status }
+      if (!response.ok) {
+        throw new Error('Failed to fetch expiry alerts')
       }
       
-      // Generate more comprehensive mock data with exactly 10 expired records
-      const mockData = []
+      const data = await response.json()
       
-      // Employee 0001 - 2 expired documents
-      mockData.push(
-        { empId: '0001', type: 'Passport', number: 'P12345678', expiry: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000), fileName: undefined }, // Expired 30 days ago
-        { empId: '0001', type: 'Visa', number: 'V-2024-001', expiry: new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000), fileName: 'visa_copy_1753434010596_sample.pdf' }, // Expired 15 days ago
-        { empId: '0001', type: 'Emirates ID', number: '784-0001-5678', expiry: new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000), fileName: 'emirates_id_copy_1753434010592_sample.pdf' }, // Critical - 5 days
-        { empId: '0001', type: 'MOL', number: 'MOL-0001-001', expiry: new Date(today.getTime() + 45 * 24 * 60 * 60 * 1000), fileName: undefined }, // Warning - 45 days
-        { empId: '0001', type: 'Certificate', number: 'CERT-0001-456', expiry: new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000), fileName: 'msra_1753434010599_sample.pdf' }, // Safe - 90 days
-        { empId: '0001', type: 'Group Insurance', number: 'GI-0001-123', expiry: new Date(today.getTime() + 120 * 24 * 60 * 60 * 1000), fileName: 'group_insurance_copy_1753434010603_sample.pdf' }, // Safe - 120 days
-      )
+      if (data.success && data.alerts) {
+        const transformedAlerts: ExpiryAlert[] = data.alerts.map((alert: any, index: number) => ({
+          id: `alert-${index + 1}`,
+          employeeId: alert.employeeId,
+          documentType: alert.documentType,
+          documentNumber: alert.documentNumber,
+          expiryDate: alert.expiryDate,
+          daysUntilExpiry: alert.daysUntilExpiry,
+          status: alert.status.toLowerCase() as ExpiryAlert['status'],
+          attachmentFileName: alert.attachmentFileName
+        }))
+        
+        setAlerts(transformedAlerts)
+        setFilteredAlerts(transformedAlerts)
+        return
+      }
       
-      // Employee 0002 - 2 expired documents
-      mockData.push(
-        { empId: '0002', type: 'MOL', number: 'MOL-0002-001', expiry: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000), fileName: undefined }, // Expired 7 days ago
-        { empId: '0002', type: 'Emirates ID', number: '784-0002-5678', expiry: new Date(today.getTime() - 45 * 24 * 60 * 60 * 1000), fileName: 'emirates_id_copy_1753434010592_sample.pdf' }, // Expired 45 days ago
-        { empId: '0002', type: 'Passport', number: 'P87654321', expiry: new Date(today.getTime() + 15 * 24 * 60 * 60 * 1000), fileName: undefined }, // Critical - 15 days
-        { empId: '0002', type: 'Visa', number: 'V-2024-002', expiry: new Date(today.getTime() + 28 * 24 * 60 * 60 * 1000), fileName: 'visa_copy_1753434010596_sample.pdf' }, // Critical - 28 days
-        { empId: '0002', type: 'Certificate', number: 'CERT-0002-456', expiry: new Date(today.getTime() + 55 * 24 * 60 * 60 * 1000), fileName: 'msra_1753434010599_sample.pdf' }, // Warning - 55 days
-        { empId: '0002', type: 'Group Insurance', number: 'GI-0002-123', expiry: new Date(today.getTime() + 200 * 24 * 60 * 60 * 1000), fileName: 'group_insurance_copy_1753434010603_sample.pdf' }, // Safe - 200 days
-      )
-      
-      // Employee 0003 - 3 expired documents
-      mockData.push(
-        { empId: '0003', type: 'Certificate', number: 'CERT-0003-456', expiry: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000), fileName: 'msra_1753434010599_sample.pdf' }, // Expired 2 days ago
-        { empId: '0003', type: 'Group Insurance', number: 'GI-0003-123', expiry: new Date(today.getTime() - 20 * 24 * 60 * 60 * 1000), fileName: 'group_insurance_copy_1753434010603_sample.pdf' }, // Expired 20 days ago
-        { empId: '0003', type: 'Visa', number: 'V-2024-003', expiry: new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000), fileName: 'visa_copy_1753434010596_sample.pdf' }, // Expired 60 days ago
-        { empId: '0003', type: 'MOL', number: 'MOL-0003-001', expiry: new Date(today.getTime() + 12 * 24 * 60 * 60 * 1000), fileName: undefined }, // Critical - 12 days
-        { empId: '0003', type: 'Emirates ID', number: '784-0003-5678', expiry: new Date(today.getTime() + 35 * 24 * 60 * 60 * 1000), fileName: 'emirates_id_copy_1753434010592_sample.pdf' }, // Warning - 35 days
-        { empId: '0003', type: 'Passport', number: 'P11223344', expiry: new Date(today.getTime() + 180 * 24 * 60 * 60 * 1000), fileName: undefined }, // Safe - 180 days
-      )
-      
-      // Employee 0004 - 2 expired documents
-      mockData.push(
-        { empId: '0004', type: 'Emirates ID', number: '784-0004-5678', expiry: new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000), fileName: 'emirates_id_copy_1753434010592_sample.pdf' }, // Expired 10 days ago
-        { empId: '0004', type: 'Passport', number: 'P99887766', expiry: new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000), fileName: undefined }, // Expired 90 days ago
-        { empId: '0004', type: 'MOL', number: 'MOL-0004-001', expiry: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000), fileName: undefined }, // Critical - 3 days
-        { empId: '0004', type: 'Visa', number: 'V-2024-004', expiry: new Date(today.getTime() + 20 * 24 * 60 * 60 * 1000), fileName: 'visa_copy_1753434010596_sample.pdf' }, // Critical - 20 days
-        { empId: '0004', type: 'Certificate', number: 'CERT-0004-456', expiry: new Date(today.getTime() + 58 * 24 * 60 * 60 * 1000), fileName: 'msra_1753434010599_sample.pdf' }, // Warning - 58 days
-        { empId: '0004', type: 'Group Insurance', number: 'GI-0004-123', expiry: new Date(today.getTime() + 150 * 24 * 60 * 60 * 1000), fileName: 'group_insurance_copy_1753434010603_sample.pdf' }, // Safe - 150 days
-      )
-      
-      // Employee 0005 - 1 expired document
-      mockData.push(
-        { empId: '0005', type: 'Group Insurance', number: 'GI-0005-123', expiry: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000), fileName: 'group_insurance_copy_1753434010603_sample.pdf' }, // Expired 5 days ago
-        { empId: '0005', type: 'MOL', number: 'MOL-0005-001', expiry: new Date(today.getTime() + 8 * 24 * 60 * 60 * 1000), fileName: undefined }, // Critical - 8 days
-        { empId: '0005', type: 'Emirates ID', number: '784-0005-5678', expiry: new Date(today.getTime() + 25 * 24 * 60 * 60 * 1000), fileName: 'emirates_id_copy_1753434010592_sample.pdf' }, // Critical - 25 days
-        { empId: '0005', type: 'Passport', number: 'P55443322', expiry: new Date(today.getTime() + 40 * 24 * 60 * 60 * 1000), fileName: undefined }, // Warning - 40 days
-        { empId: '0005', type: 'Visa', number: 'V-2024-005', expiry: new Date(today.getTime() + 50 * 24 * 60 * 60 * 1000), fileName: 'visa_copy_1753434010596_sample.pdf' }, // Warning - 50 days
-        { empId: '0005', type: 'Certificate', number: 'CERT-0005-456', expiry: new Date(today.getTime() + 365 * 24 * 60 * 60 * 1000), fileName: 'msra_1753434010599_sample.pdf' }, // Safe - 365 days
-      )
-      
-      // Create alerts from mock data
-      mockData.forEach((item, index) => {
-        const { days, status } = calculateDaysAndStatus(item.expiry)
-        mockAlerts.push({
-          id: `alert-${item.empId}-${index}`,
-          employeeId: item.empId,
-          documentType: item.type,
-          documentNumber: item.number,
-          expiryDate: item.expiry.toISOString().split('T')[0],
-          daysUntilExpiry: days,
-          status,
-          attachmentFileName: item.fileName
-        })
-      })
-      
-      // Sort by days until expiry (most urgent first)
-      mockAlerts.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry)
-      
-      // Extract unique employee IDs for filter
-      const uniqueEmployeeIds = Array.from(new Set(mockAlerts.map(a => a.employeeId))).sort()
-      setFilterOptions(prev => ({ ...prev, employeeIds: uniqueEmployeeIds }))
-      
-      // Log expired count for verification
-      const expiredCount = mockAlerts.filter(a => a.status === 'expired').length
-      console.log(`Total expired records: ${expiredCount}`) // Should be exactly 10
-      
-      setAlerts(mockAlerts)
-      setFilteredAlerts(mockAlerts)
+
     } catch (error) {
       console.error('Error fetching alerts:', error)
       toast.error('Failed to load expiry alerts')

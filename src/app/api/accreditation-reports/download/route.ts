@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     
     const execAsync = promisify(exec);
     const tempFile = path.join(os.tmpdir(), report.fileName);
-    const gcsPath = `gs://pmo-documents-hybrid-shine-466111-s0/reports/${report.id}/${report.fileName}`;
+    const gcsPath = `gs://pmo-documents-hybrid-shine-466111-s0/manpower - accreditation/reports/${report.id}/${report.fileName}`;
     
     let buffer: Buffer;
     try {

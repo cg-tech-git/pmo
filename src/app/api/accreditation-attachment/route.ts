@@ -43,6 +43,11 @@ export async function GET(request: NextRequest) {
       const attachmentPath = `gs://${bucketName}/${folderName}/attachments/${employeeId}/${cleanFilename}`;
       possiblePaths.push(attachmentPath);
       console.log('Looking for attachment at:', attachmentPath);
+      
+      // Also try alternate path structure (without space in folder name)
+      const alternatePath = `gs://${bucketName}/manpower-accreditation/attachments/${employeeId}/${cleanFilename}`;
+      possiblePaths.push(alternatePath);
+      console.log('Also trying alternate path:', alternatePath);
     } else {
       // No employee ID provided - this shouldn't happen in normal usage
       return NextResponse.json({ error: 'Employee ID is required' }, { status: 400 });
